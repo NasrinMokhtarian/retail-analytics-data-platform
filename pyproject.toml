@@ -1,0 +1,11 @@
+[project]
+name = "retail-analytics-data-platform"
+version = "0.1.0"
+description = "Retail analytics data platform for local ingestion, cleaning, modeling, and analytics practice."
+requires-python = ">=3.10"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

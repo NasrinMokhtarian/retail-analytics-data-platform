@@ -1,0 +1,11 @@
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_DIR = PROJECT_ROOT / 'data'
+RAW_DATA_DIR = DATA_DIR / 'raw'
+OLIST_DATA_DIR = RAW_DATA_DIR / 'olist'
+
+REPORTS_DIR = PROJECT_ROOT / 'reports'
+RAW_INVENTORY_REPORT_DIR = REPORTS_DIR / 'raw_inventory'
+
+DEFAULT_CHUNK_SIZE = 100_000

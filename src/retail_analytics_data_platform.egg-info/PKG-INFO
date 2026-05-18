@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: retail-analytics-data-platform
+Version: 0.1.0
+Summary: Retail analytics data platform for local ingestion, cleaning, modeling, and analytics practice.
+Requires-Python: >=3.10
