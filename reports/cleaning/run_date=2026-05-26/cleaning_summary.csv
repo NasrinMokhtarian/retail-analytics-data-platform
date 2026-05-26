@@ -1,0 +1,10 @@
+source_file,output_file,row_count,column_count,timestamp_columns_processed,numeric_column_processed,invalid_timestamp_count,invalid_numeric_count,cleaned_at
+olist_customers_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\customers_clean.csv,99441,8,0,0,0,0,2026-05-26T18:34:10.584937+00:00
+olist_geolocation_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\geolocation_clean.csv,1000163,8,0,2,0,0,2026-05-26T18:34:11.235074+00:00
+olist_order_items_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\order_items_clean.csv,112650,10,1,2,0,0,2026-05-26T18:34:16.812345+00:00
+olist_order_payments_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\order_payments_clean.csv,103886,8,0,3,0,0,2026-05-26T18:34:17.799957+00:00
+olist_order_reviews_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\order_reviews_clean.csv,99224,10,2,1,0,0,2026-05-26T18:34:18.310284+00:00
+olist_orders_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\orders_clean.csv,99441,11,5,0,0,0,2026-05-26T18:34:19.374205+00:00
+olist_products_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\products_clean.csv,32951,12,0,7,0,0,2026-05-26T18:34:20.866636+00:00
+olist_sellers_dataset.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\sellers_clean.csv,3095,7,0,0,0,0,2026-05-26T18:34:21.167519+00:00
+product_category_name_translation.csv,G:\retail-analytics-data-platform\data\processed\olist_clean\run_date=2026-05-26\product_category_translation_clean.csv,71,5,0,0,0,0,2026-05-26T18:34:21.192105+00:00

@@ -1,0 +1,82 @@
+rule_id,source_file,column_name,rule_type,severity,status,failed_count,total_count,failure_percentage,message,checked_at
+DQ_FILE_EXISTS_olist_customers_dataset.csv,olist_customers_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_geolocation_dataset.csv,olist_geolocation_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_order_items_dataset.csv,olist_order_items_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_order_reviews_dataset.csv,olist_order_reviews_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_orders_dataset.csv,olist_orders_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_products_dataset.csv,olist_products_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_olist_sellers_dataset.csv,olist_sellers_dataset.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_FILE_EXISTS_product_category_name_translation.csv,product_category_name_translation.csv,,file_exists,error,PASS,0,1,0.0,Expected file exists,2026-05-23T16:26:59.481161+00:00
+DQ_REQUIRED_COLUMN_olist_customers_dataset.csv_customer_id,olist_customers_dataset.csv,customer_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:26:59.641558+00:00
+DQ_REQUIRED_COLUMN_olist_customers_dataset.csv_customer_unique_id,olist_customers_dataset.csv,customer_unique_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:26:59.641558+00:00
+DQ_REQUIRED_COLUMN_olist_customers_dataset.csv_customer_zip_code_prefix,olist_customers_dataset.csv,customer_zip_code_prefix,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:26:59.641558+00:00
+DQ_REQUIRED_COLUMN_olist_customers_dataset.csv_customer_city,olist_customers_dataset.csv,customer_city,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:26:59.641558+00:00
+DQ_REQUIRED_COLUMN_olist_customers_dataset.csv_customer_state,olist_customers_dataset.csv,customer_state,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:26:59.641558+00:00
+DQ_NOT_NULL_003,olist_customers_dataset.csv,customer_id,not_null,error,PASS,0,99441,0.0,Column has no null values,2026-05-23T16:26:59.644563+00:00
+DQ_REQUIRED_COLUMN_olist_geolocation_dataset.csv_geolocation_zip_code_prefix,olist_geolocation_dataset.csv,geolocation_zip_code_prefix,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.274200+00:00
+DQ_REQUIRED_COLUMN_olist_geolocation_dataset.csv_geolocation_lat,olist_geolocation_dataset.csv,geolocation_lat,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.274200+00:00
+DQ_REQUIRED_COLUMN_olist_geolocation_dataset.csv_geolocation_lng,olist_geolocation_dataset.csv,geolocation_lng,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.274200+00:00
+DQ_REQUIRED_COLUMN_olist_geolocation_dataset.csv_geolocation_city,olist_geolocation_dataset.csv,geolocation_city,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.274200+00:00
+DQ_REQUIRED_COLUMN_olist_geolocation_dataset.csv_geolocation_state,olist_geolocation_dataset.csv,geolocation_state,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.274200+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_order_id,olist_order_items_dataset.csv,order_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_order_item_id,olist_order_items_dataset.csv,order_item_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_product_id,olist_order_items_dataset.csv,product_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_seller_id,olist_order_items_dataset.csv,seller_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_shipping_limit_date,olist_order_items_dataset.csv,shipping_limit_date,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_price,olist_order_items_dataset.csv,price,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_REQUIRED_COLUMN_olist_order_items_dataset.csv_freight_value,olist_order_items_dataset.csv,freight_value,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.483006+00:00
+DQ_NOT_NULL_004,olist_order_items_dataset.csv,order_id,not_null,error,PASS,0,112650,0.0,Column has no null values,2026-05-23T16:27:00.497997+00:00
+DQ_NOT_NULL_005,olist_order_items_dataset.csv,product_id,not_null,error,PASS,0,112650,0.0,Column has no null values,2026-05-23T16:27:00.500578+00:00
+DQ_NOT_NULL_006,olist_order_items_dataset.csv,seller_id,not_null,error,PASS,0,112650,0.0,Column has no null values,2026-05-23T16:27:00.503681+00:00
+DQ_NON_NEG_001,olist_order_items_dataset.csv,price,non_negative,error,PASS,0,112650,0.0,Column values are numeric and non-negative,2026-05-23T16:27:00.504627+00:00
+DQ_NON_NEG_002,olist_order_items_dataset.csv,freight_value,non_negative,error,PASS,0,112650,0.0,Column values are numeric and non-negative,2026-05-23T16:27:00.505679+00:00
+DQ_TS_006,olist_order_items_dataset.csv,shipping_limit_date,parseable_timestamp,error,PASS,0,112650,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:00.547473+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_id,olist_order_reviews_dataset.csv,review_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_order_id,olist_order_reviews_dataset.csv,order_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_score,olist_order_reviews_dataset.csv,review_score,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_comment_title,olist_order_reviews_dataset.csv,review_comment_title,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_comment_message,olist_order_reviews_dataset.csv,review_comment_message,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_creation_date,olist_order_reviews_dataset.csv,review_creation_date,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_REQUIRED_COLUMN_olist_order_reviews_dataset.csv_review_answer_timestamp,olist_order_reviews_dataset.csv,review_answer_timestamp,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:00.907578+00:00
+DQ_NOT_NULL_008,olist_order_reviews_dataset.csv,review_id,not_null,error,PASS,0,99224,0.0,Column has no null values,2026-05-23T16:27:00.907578+00:00
+DQ_NOT_NULL_009,olist_order_reviews_dataset.csv,order_id,not_null,error,PASS,0,99224,0.0,Column has no null values,2026-05-23T16:27:00.915484+00:00
+DQ_NON_NEG_004,olist_order_reviews_dataset.csv,review_score,non_negative,error,PASS,0,99224,0.0,Column values are numeric and non-negative,2026-05-23T16:27:00.915484+00:00
+DQ_TS_007,olist_order_reviews_dataset.csv,review_creation_date,parseable_timestamp,error,PASS,0,99224,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:00.923718+00:00
+DQ_TS_008,olist_order_reviews_dataset.csv,review_answer_timestamp,parseable_timestamp,error,PASS,0,99224,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:00.957606+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_id,olist_orders_dataset.csv,order_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_customer_id,olist_orders_dataset.csv,customer_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_status,olist_orders_dataset.csv,order_status,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_purchase_timestamp,olist_orders_dataset.csv,order_purchase_timestamp,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_approved_at,olist_orders_dataset.csv,order_approved_at,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_delivered_carrier_date,olist_orders_dataset.csv,order_delivered_carrier_date,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_delivered_customer_date,olist_orders_dataset.csv,order_delivered_customer_date,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_REQUIRED_COLUMN_olist_orders_dataset.csv_order_estimated_delivery_date,olist_orders_dataset.csv,order_estimated_delivery_date,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.299250+00:00
+DQ_NOT_NULL_001,olist_orders_dataset.csv,order_id,not_null,error,PASS,0,99441,0.0,Column has no null values,2026-05-23T16:27:01.302261+00:00
+DQ_NOT_NULL_002,olist_orders_dataset.csv,customer_id,not_null,error,PASS,0,99441,0.0,Column has no null values,2026-05-23T16:27:01.304267+00:00
+DQ_TS_001,olist_orders_dataset.csv,order_purchase_timestamp,parseable_timestamp,error,PASS,0,99441,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:01.323529+00:00
+DQ_TS_002,olist_orders_dataset.csv,order_approved_at,parseable_timestamp,warning,PASS,0,99281,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:01.371599+00:00
+DQ_TS_003,olist_orders_dataset.csv,order_delivered_carrier_date,parseable_timestamp,warning,PASS,0,97658,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:01.402292+00:00
+DQ_TS_004,olist_orders_dataset.csv,order_delivered_customer_date,parseable_timestamp,warning,PASS,0,96476,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:01.432729+00:00
+DQ_TS_005,olist_orders_dataset.csv,order_estimated_delivery_date,parseable_timestamp,error,PASS,0,99441,0.0,Non-null values are parseable as timestamps,2026-05-23T16:27:01.432729+00:00
+DQ_ACCEPTED_VALUES_001,olist_orders_dataset.csv,order_status,accepted_values,warning,PASS,0,99441,0.0,Column values are within the accepted set,2026-05-23T16:27:01.448542+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_id,olist_products_dataset.csv,product_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_category_name,olist_products_dataset.csv,product_category_name,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_name_lenght,olist_products_dataset.csv,product_name_lenght,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_description_lenght,olist_products_dataset.csv,product_description_lenght,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_photos_qty,olist_products_dataset.csv,product_photos_qty,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_weight_g,olist_products_dataset.csv,product_weight_g,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_length_cm,olist_products_dataset.csv,product_length_cm,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_height_cm,olist_products_dataset.csv,product_height_cm,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_products_dataset.csv_product_width_cm,olist_products_dataset.csv,product_width_cm,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.506272+00:00
+DQ_NOT_NULL_010,olist_products_dataset.csv,product_id,not_null,error,PASS,0,32951,0.0,Column has no null values,2026-05-23T16:27:01.506272+00:00
+DQ_NON_NEG_005,olist_products_dataset.csv,product_weight_g,non_negative,warning,PASS,0,32951,0.0,Column values are numeric and non-negative,2026-05-23T16:27:01.506272+00:00
+DQ_NON_NEG_006,olist_products_dataset.csv,product_length_cm,non_negative,warning,PASS,0,32951,0.0,Column values are numeric and non-negative,2026-05-23T16:27:01.506272+00:00
+DQ_NON_NEG_007,olist_products_dataset.csv,product_height_cm,non_negative,warning,PASS,0,32951,0.0,Column values are numeric and non-negative,2026-05-23T16:27:01.506272+00:00
+DQ_NON_NEG_008,olist_products_dataset.csv,product_width_cm,non_negative,warning,PASS,0,32951,0.0,Column values are numeric and non-negative,2026-05-23T16:27:01.506272+00:00
+DQ_REQUIRED_COLUMN_olist_sellers_dataset.csv_seller_id,olist_sellers_dataset.csv,seller_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
+DQ_REQUIRED_COLUMN_olist_sellers_dataset.csv_seller_zip_code_prefix,olist_sellers_dataset.csv,seller_zip_code_prefix,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
+DQ_REQUIRED_COLUMN_olist_sellers_dataset.csv_seller_city,olist_sellers_dataset.csv,seller_city,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
+DQ_REQUIRED_COLUMN_olist_sellers_dataset.csv_seller_state,olist_sellers_dataset.csv,seller_state,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
+DQ_NOT_NULL_011,olist_sellers_dataset.csv,seller_id,not_null,error,PASS,0,3095,0.0,Column has no null values,2026-05-23T16:27:01.514607+00:00
+DQ_REQUIRED_COLUMN_product_category_name_translation.csv_product_category_name,product_category_name_translation.csv,product_category_name,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
+DQ_REQUIRED_COLUMN_product_category_name_translation.csv_product_category_name_english,product_category_name_translation.csv,product_category_name_english,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-23T16:27:01.514607+00:00
