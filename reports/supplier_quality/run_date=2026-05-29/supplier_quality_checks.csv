@@ -1,0 +1,27 @@
+rule_id,source_file,column_name,rule_type,severity,status,failed_count,total_count,failure_percentage,message,checked_at
+SUP_DQ_FILE_EXIXTS_001,supplier_product_updates_2026-05-24.csv,,file_exists,error,PASS,0,1,0.0,Expected supplier file exists.,2026-05-29T09:37:13.083892+00:00
+SUP_DQ_REQUIRED_COLUMN_supplier_id,supplier_product_updates_2026-05-24.csv,supplier_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_product_id,supplier_product_updates_2026-05-24.csv,product_id,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_supplier_product_code,supplier_product_updates_2026-05-24.csv,supplier_product_code,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_updated_price,supplier_product_updates_2026-05-24.csv,updated_price,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_currency,supplier_product_updates_2026-05-24.csv,currency,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_stock_status,supplier_product_updates_2026-05-24.csv,stock_status,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_valid_from,supplier_product_updates_2026-05-24.csv,valid_from,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_last_updated_at,supplier_product_updates_2026-05-24.csv,last_updated_at,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_REQUIRED_COLUMN_comments,supplier_product_updates_2026-05-24.csv,comments,required_column_exists,error,PASS,0,1,0.0,Required column exists,2026-05-29T09:37:13.085909+00:00
+SUP_DQ_NOT_NULL_DQ001,supplier_product_updates_2026-05-24.csv,supplier_id,not_null,error,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.091189+00:00
+SUP_DQ_NOT_NULL_DQ002,supplier_product_updates_2026-05-24.csv,supplier_name,not_null,error,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.091189+00:00
+SUP_DQ_NOT_NULL_DQ003,supplier_product_updates_2026-05-24.csv,product_id,not_null,warning,FAIL,1,10,10.0,Column containes 1 null or blank values,2026-05-29T09:37:13.092198+00:00
+SUP_DQ_NOT_NULL_DQ004,supplier_product_updates_2026-05-24.csv,supplier_product_code,not_null,error,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.092198+00:00
+SUP_DQ_NOT_NULL_DQ005,supplier_product_updates_2026-05-24.csv,updated_price,not_null,error,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.092705+00:00
+SUP_DQ_NOT_NULL_DQ006,supplier_product_updates_2026-05-24.csv,updated_price,not_null,error,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.092705+00:00
+SUP_DQ_NOT_NULL_DQ007,supplier_product_updates_2026-05-24.csv,currency,not_null,error,FAIL,2,10,20.0,Column containes 2 null or blank values,2026-05-29T09:37:13.093714+00:00
+SUP_DQ_NOT_NULL_DQ008,supplier_product_updates_2026-05-24.csv,valid_from,not_null,warning,FAIL,2,10,20.0,Column containes 2 null or blank values,2026-05-29T09:37:13.093714+00:00
+SUP_DQ_NOT_NULL_DQ009,supplier_product_updates_2026-05-24.csv,last_updated_at,not_null,warning,PASS,0,10,0.0,Column has no null values,2026-05-29T09:37:13.094731+00:00
+SUP_DQ_PRICE_NUMERIC_001,supplier_product_updates_2026-05-24.csv,updated_price,parseable_numeric,error,FAIL,1,10,10.0,updated_price contains 1 non-parseable values,2026-05-29T09:37:13.095717+00:00
+SUP_DQ_PRICE_NON_NEGATIVE_001,supplier_product_updates_2026-05-24.csv,updated_price,non_negative,error,FAIL,1,9,11.11,updated_price contains 1 negative values,2026-05-29T09:37:13.097712+00:00
+SUP_DQ_CURRENCY_ACCEPTED_001,supplier_product_updates_2026-05-24.csv,currency,accepted_values,error,PASS,0,8,0.0,currency values are within accepted values,2026-05-29T09:37:13.099713+00:00
+SUP_DQ_STOCK_STATUS_ACCEPTED_001,supplier_product_updates_2026-05-24.csv,stock_status,accepted_values,warning,FAIL,1,10,10.0,stock_status contains 1 values outside accepted values,2026-05-29T09:37:13.100714+00:00
+SUP_DQ_VALID_FROM_DATE_001,supplier_product_updates_2026-05-24.csv,valid_from,parseable_date,warning,FAIL,1,8,12.5,valid_from contains 1 non-parseable values,2026-05-29T09:37:13.108850+00:00
+SUP_DQ_LAST_UPDATED_TIMESTAMP_001,supplier_product_updates_2026-05-24.csv,last_updated_at,parseable_timestamp,warning,FAIL,2,10,20.0,last_updated_at contains 2 non-parseable values,2026-05-29T09:37:13.115519+00:00
+SUP_DQ_DUPLICATE_KEY_001,supplier_product_updates_2026-05-24.csv,"supplier_id,product_id,supplier_product_code",duplicate_business_key,warning,FAIL,2,10,20.0,Found 2 rows with duplicate supplier business keys,2026-05-29T09:37:13.121601+00:00

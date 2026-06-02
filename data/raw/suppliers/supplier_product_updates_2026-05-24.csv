@@ -1,0 +1,11 @@
+supplier_id,supplier_name,product_id,supplier_product_code,updated_price,currency,stock_status,valid_from,last_updated_at,comments
+SUP001,  Alpha Home Supplies ,1e9e8ef04dbcff4541ed26657ea517e5, AH-1001 , 89.90 ,EUR,In Stock,2026-05-24,2026-05-24 09:15:00,Normal update
+SUP002,Beta Retail Group,3aa071139cb16b67ca9e5dea641aaa2f,BR-2201,"120,50",eur,in stock,24-05-2026,2026/05/24 10:30,Price uses comma decimal separator
+SUP003,Gamma Wholesale,,GW-3305,45.00,EUR,Out of Stock,2026-05-24,2026-05-24 11:00:00,Missing product_id
+SUP004,Delta Imports,96bd76ec8810374ed1b65e291975717f,DI-4402,not available,EUR,Limited,2026-05-24,2026-05-24 12:45:00,Invalid price text
+SUP005,Echo Distribution,cef67bcfe19066a932b7673e239eb23d,ED-5507,-10.00,EUR,In Stock,2026-05-24,2026-05-24 13:05:00,Negative price should be flagged
+SUP006,Foxtrot Partner,9dc1a7de274444849c219cff195d0b71,FP-6609,77.25,USD,In Stock,2026-05-24,invalid_date,Unexpected currency and invalid timestamp
+SUP007,  North Star Supply,41d3672d4792049fa1779bb35283ed13, NS-7701 ,33.40,EUR,unknown,2026-05-24,2026-05-24 14:20:00,Unknown stock status
+SUP008,Orion Components,732bd381ad09e530fe0a5f457d81becb,OC-8800,58.10,,In Stock,,2026-05-24 15:00:00,Missing currency and valid_from
+SUP008,Orion Components,732bd381ad09e530fe0a5f457d81becb,OC-8800,58.10,,In Stock,,2026-05-24 15:00:00,Duplicate row
+SUP009,Zeta Market,2548af3e6e77a690cf3eb6368e9ab61e,ZM-9901,102.99,EUR,Discontinued,2026-05-24,2026-05-24 16:10:00,Valid discontinued product

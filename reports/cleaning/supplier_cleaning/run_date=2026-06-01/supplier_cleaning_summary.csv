@@ -1,0 +1,2 @@
+source_file,output_file,row_count,column_count,missing_product_id_count,missing_currency_count,invalid_price_count,negative_price_count,unknown_stock_status_count,invalid_valid_from_count,invalid_last_updated_at_count,duplicate_business_key_count,cleaned_at
+supplier_product_updates_2026-05-24.csv,G:\retail-analytics-data-platform\data\processed\supplier_clean\run_date=2026-06-01\supplier_product_updates_clean.csv,10,27,1,2,1,1,1,0,1,2,2026-06-01T22:09:08.204220+00:00

@@ -1,0 +1,13 @@
+check_id,source_file,cleaned_file,check_type,severity,status,raw_row_count,cleaned_row_count,failed_count,total_count,message,validated_at
+SUP_RAW_EXISTS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,raw_file_exists,error,PASS,,,0,1,File exists,2026-06-02T08:17:27.321881+00:00
+SUP_CLEAN_EXISTS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,cleaned_file_exists,error,PASS,,,0,1,File exists,2026-06-02T08:17:27.321881+00:00
+SUP_CLEAN_READABLE_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,cleaned_file_readable,error,PASS,,10.0,0,1,Cleaned supplier file is readable,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_ROW_COUNT_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,row_count_matches,error,PASS,10.0,10.0,0,1,Raw and cleaned supplier row counts match,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_NOT_EMPTY_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,cleaned_file_not_empty,error,PASS,,10.0,0,1,Cleaned supplier file is not empty,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_ORIGINAL_COLUMNS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,original_columns_exist,error,PASS,,10.0,0,10,All required columns exist,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_STANDARDIZED_COLUMNS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,standardized_columns_exist,error,PASS,,10.0,0,5,All required columns exist,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_FLAG_COLUMNS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,quality_flag_columns_exist,error,PASS,,10.0,0,9,All required columns exist,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_METADATA_COLUMNS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,metadata_columns_exist,error,PASS,,10.0,0,3,All required columns exist,2026-06-02T08:17:27.328136+00:00
+SUP_CLEAN_RUN_DATE_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,run_date_values_match,error,PASS,,10.0,0,10,All run_date values match expected run_date,2026-06-02T08:17:27.330226+00:00
+SUP_CLEAN_SOURCE_FILE_NAME_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,source_file_name_values_match,error,PASS,,10.0,0,10,All source_file_name values match expected supplier source file,2026-06-02T08:17:27.330226+00:00
+SUP_CLEAN_FLAG_BOOLEAN_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,flag_columns_boolean_like,warning,PASS,,10.0,0,90,All existing quality flag columns are boolean-like,2026-06-02T08:17:27.334890+00:00

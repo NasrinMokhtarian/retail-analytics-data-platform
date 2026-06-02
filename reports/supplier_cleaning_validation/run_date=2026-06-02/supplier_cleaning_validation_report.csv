@@ -1,0 +1,3 @@
+check_id,source_file,cleaned_file,check_type,severity,status,raw_row_count,cleaned_row_count,failed_count,total_count,message,validated_at
+SUP_RAW_EXISTS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,raw_file_exists,error,PASS,,,0,1,File exists,2026-06-02T07:56:26.575154+00:00
+SUP_CLEAN_EXISTS_001,supplier_product_updates_2026-05-24.csv,supplier_product_updates_clean.csv,cleaned_file_exists,error,FAIL,,,1,1,File is missing: G:\retail-analytics-data-platform\data\processed\supplier_clean\run_date=2026-06-02\supplier_product_updates_clean.csv,2026-06-02T07:56:26.575154+00:00

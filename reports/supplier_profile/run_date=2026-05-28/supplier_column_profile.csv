@@ -1,0 +1,11 @@
+file_name,column_name,column_dtype,row_count,null_count,null_percentage,non_null_count,distinct_count,sample_values,profiled_at
+supplier_product_updates_2026-05-24.csv,supplier_id,str,10,0,0.0,10,9,"[""SUP001"", ""SUP002"", ""SUP003"", ""SUP004"", ""SUP005""]",2026-05-28T19:44:30.330432+00:00
+supplier_product_updates_2026-05-24.csv,supplier_name,str,10,0,0.0,10,9,"[""  Alpha Home Supplies "", ""Beta Retail Group"", ""Gamma Wholesale"", ""Delta Imports"", ""Echo Distribution""]",2026-05-28T19:44:30.331460+00:00
+supplier_product_updates_2026-05-24.csv,product_id,str,10,1,10.0,9,8,"[""1e9e8ef04dbcff4541ed26657ea517e5"", ""3aa071139cb16b67ca9e5dea641aaa2f"", ""96bd76ec8810374ed1b65e291975717f"", ""cef67bcfe19066a932b7673e239eb23d"", ""9dc1a7de274444849c219cff195d0b71""]",2026-05-28T19:44:30.332457+00:00
+supplier_product_updates_2026-05-24.csv,supplier_product_code,str,10,0,0.0,10,9,"["" AH-1001 "", ""BR-2201"", ""GW-3305"", ""DI-4402"", ""ED-5507""]",2026-05-28T19:44:30.332457+00:00
+supplier_product_updates_2026-05-24.csv,updated_price,str,10,0,0.0,10,9,"["" 89.90 "", ""120,50"", ""45.00"", ""not available"", ""-10.00""]",2026-05-28T19:44:30.333456+00:00
+supplier_product_updates_2026-05-24.csv,currency,str,10,2,20.0,8,3,"[""EUR"", ""eur"", ""USD""]",2026-05-28T19:44:30.333456+00:00
+supplier_product_updates_2026-05-24.csv,stock_status,str,10,0,0.0,10,6,"[""In Stock"", ""in stock"", ""Out of Stock"", ""Limited"", ""unknown""]",2026-05-28T19:44:30.334584+00:00
+supplier_product_updates_2026-05-24.csv,valid_from,str,10,2,20.0,8,2,"[""2026-05-24"", ""24-05-2026""]",2026-05-28T19:44:30.335647+00:00
+supplier_product_updates_2026-05-24.csv,last_updated_at,str,10,0,0.0,10,9,"[""2026-05-24 09:15:00"", ""2026/05/24 10:30"", ""2026-05-24 11:00:00"", ""2026-05-24 12:45:00"", ""2026-05-24 13:05:00""]",2026-05-28T19:44:30.335647+00:00
+supplier_product_updates_2026-05-24.csv,comments,str,10,0,0.0,10,10,"[""Normal update"", ""Price uses comma decimal separator"", ""Missing product_id"", ""Invalid price text"", ""Negative price should be flagged""]",2026-05-28T19:44:30.336651+00:00
