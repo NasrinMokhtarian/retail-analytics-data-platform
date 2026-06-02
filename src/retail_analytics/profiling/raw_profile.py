@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pandas as pd # type: ignore[import]
 
-from retail_analytics.config import DEAFULT_SAMPLE_VALUES_LIMIT
+from retail_analytics.config import DEFAULT_SAMPLE_VALUES_LIMIT
 from retail_analytics.models.raw_profile import RawColumnProfile
 from retail_analytics.validation.raw_files import validate_row_data_dir,validate_csv_file_exist
 
@@ -24,7 +24,7 @@ def discover_csv_files(raw_data_dir: Path) -> list[Path]:
                 })
     return csv_files
         
-def get_sample_values(series: pd.Series,sample_limit: int = DEAFULT_SAMPLE_VALUES_LIMIT )-> str:
+def get_sample_values(series: pd.Series,sample_limit: int = DEFAULT_SAMPLE_VALUES_LIMIT )-> str:
     sample_values = (
         series.dropna()
         .astype(str)
@@ -82,7 +82,7 @@ def profile_csv_file(csv_path: Path) -> list[RawColumnProfile]:
 
     return column_profiles
             
-def build_raw_profile(raw_data_dir:Path, output_dir:Path, run_date:str) -> Path:
+def build_raw_profile(raw_data_dir:Path, output_dir:Path, run_date:str,output_filename: str = "raw_column_profile.csv") -> Path:
     csv_files = discover_csv_files(raw_data_dir)
     profile_records: list[dict]=[]
     try:
@@ -100,10 +100,10 @@ def build_raw_profile(raw_data_dir:Path, output_dir:Path, run_date:str) -> Path:
                 } 
         )
         raise
-    run_output_dir = output_dir / f"run_date = {run_date}"
+    run_output_dir = output_dir / f"run_date={run_date}"
     run_output_dir.mkdir(parents = True, exist_ok= True)
 
-    output_file = run_output_dir / "raw_column_profile.csv"
+    output_file = run_output_dir / output_filename
     output_columns = [
         "file_name",
         "column_name",

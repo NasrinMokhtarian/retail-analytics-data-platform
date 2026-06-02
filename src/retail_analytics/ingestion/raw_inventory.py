@@ -62,7 +62,7 @@ def inspect_csv_file (csv_path: Path, chunk_size: int) -> CSVFileInventory:
      )
     return inventory
 
-def build_raw_inventory(raw_data_dir: Path, output_dir: Path,run_date: str, chunk_size: int ) -> Path:
+def build_raw_inventory(raw_data_dir: Path, output_dir: Path,run_date: str, chunk_size: int,output_filename:str = 'raw_file_inventory.csv' ) -> Path:
     csv_files = discover_csv_file(raw_data_dir)
 
     records= [
@@ -73,7 +73,7 @@ def build_raw_inventory(raw_data_dir: Path, output_dir: Path,run_date: str, chun
 
     run_output_dir = output_dir / f"run_date={run_date}"
     run_output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = run_output_dir / "raw_file_inventory.csv"
+    output_file = run_output_dir / output_filename
     pd.DataFrame(records).to_csv(output_file,index=False)
 
     logger.info(
