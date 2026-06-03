@@ -133,7 +133,7 @@ The project is currently in:
 
 ```text
 Phase 1 — Local raw data ingestion, inspection, profiling, and onboarding other resources -> Done
-Phase 2 - Design database table loading strategy
+Phase 2 - PostgreSQL Loading and SQL Practice
 ```
 ### Planned Project Roadmap
 - Phase 1 — Local Ingestion, Inspection, and Profiling
