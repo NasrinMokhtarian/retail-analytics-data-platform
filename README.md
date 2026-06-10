@@ -83,6 +83,22 @@ This is currently a **local production-style data platform**, not yet a cloud pr
 
 The project is intentionally built locally first to strengthen SQL, Python, data quality, modeling, debugging, and business-oriented thinking before adding cloud complexity.
 
+## dbt Transformation Layer
+
+The project now includes a dbt transformation layer on top of the PostgreSQL raw schema.
+
+The earlier manually written PostgreSQL staging and mart views were used as a validated SQL prototype. After validation, the transformation logic was migrated into dbt models.
+
+Current dbt flow:
+
+```text
+PostgreSQL raw tables
+→ dbt sources
+→ dbt staging models
+→ dbt mart models
+→ dbt tests
+→ dbt documentation and lineage
+
 ---
 
 ## Current Architecture

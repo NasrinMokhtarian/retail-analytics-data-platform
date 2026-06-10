@@ -1,0 +1,452 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: >
+      Customer dimension built from staged Olist customer data. One row represents
+      one customer_id and includes customer geography fields.
+
+    columns:
+      - name: customer_id
+        description: Customer identifier used to join orders to customers.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_unique_id
+        description: Unique customer identity across orders.
+
+      - name: customer_zip_code_prefix
+        description: Customer zip code prefix.
+
+      - name: customer_city
+        description: Customer city.
+
+      - name: customer_state
+        description: Customer state abbreviation.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: dim_products
+    description: >
+      Product dimension built from staged product data and category translation.
+      One row represents one product_id and includes product attributes and
+      English product category where available.
+
+    columns:
+      - name: product_id
+        description: Product identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_category_name
+        description: Original product category name.
+
+      - name: product_category_name_english
+        description: English product category name when available, otherwise original category name.
+
+      - name: product_name_length
+        description: Product name length. Renamed from original source spelling product_name_lenght.
+
+      - name: product_description_length
+        description: Product description length. Renamed from original source spelling product_description_lenght.
+
+      - name: product_photos_qty
+        description: Number of product photos.
+
+      - name: product_weight_g
+        description: Product weight in grams.
+
+      - name: product_length_cm
+        description: Product length in centimeters.
+
+      - name: product_height_cm
+        description: Product height in centimeters.
+
+      - name: product_width_cm
+        description: Product width in centimeters.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: dim_sellers
+    description: >
+      Seller dimension built from staged Olist seller data. One row represents
+      one seller_id and includes seller geography fields.
+
+    columns:
+      - name: seller_id
+        description: Seller identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: seller_zip_code_prefix
+        description: Seller zip code prefix.
+
+      - name: seller_city
+        description: Seller city.
+
+      - name: seller_state
+        description: Seller state abbreviation.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+  - name: fct_orders
+    description: >
+      Order-level fact model built from staged Olist orders. One row represents
+      one order_id and includes order lifecycle timestamps, delivery metrics,
+      customer relationship, and source metadata.
+
+    columns:
+      - name: order_id
+        description: Unique order identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Customer identifier linked to dim_customers.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: order_status
+        description: Normalized order lifecycle status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - delivered
+                  - shipped
+                  - canceled
+                  - unavailable
+                  - invoiced
+                  - processing
+                  - created
+                  - approved
+
+      - name: order_purchase_timestamp
+        description: Timestamp when the order was purchased.
+
+      - name: order_purchase_date
+        description: Date when the order was purchased.
+
+      - name: order_approved_at
+        description: Timestamp when the order was approved.
+
+      - name: order_delivered_carrier_date
+        description: Timestamp when the order was delivered to the carrier.
+
+      - name: order_delivered_customer_date
+        description: Timestamp when the order was delivered to the customer.
+
+      - name: order_estimated_delivery_date
+        description: Estimated delivery timestamp.
+
+      - name: is_delivered
+        description: Boolean flag showing whether the order status is delivered.
+
+      - name: days_to_customer_delivery
+        description: Number of days between purchase timestamp and customer delivery timestamp.
+
+      - name: delivery_delay_days
+        description: Difference in days between actual customer delivery and estimated delivery. Negative values mean early delivery.
+
+      - name: is_late_delivery
+        description: Boolean flag showing whether customer delivery happened after estimated delivery date.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: fct_order_items
+    description: >
+      Item-level fact model built from staged Olist order items. One row represents
+      one order_id and order_item_id combination and supports revenue, product,
+      seller, and freight analysis.
+
+    columns:
+      - name: order_id
+        description: Order identifier linked to fct_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: order_item_id
+        description: Item sequence number within an order.
+        data_tests:
+          - not_null
+
+      - name: product_id
+        description: Product identifier linked to dim_products.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+
+      - name: seller_id
+        description: Seller identifier linked to dim_sellers.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_id
+
+      - name: shipping_limit_date
+        description: Seller shipping deadline timestamp.
+
+      - name: price
+        description: Item price.
+        data_tests:
+          - not_null
+
+      - name: freight_value
+        description: Freight value for the item.
+        data_tests:
+          - not_null
+
+      - name: total_item_value
+        description: Item price plus freight value.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+  - name: fct_payments
+    description: >
+      Payment fact model built from staged Olist payment records. One row
+      represents one order_id and payment_sequential combination.
+
+    columns:
+      - name: order_id
+        description: Order identifier linked to fct_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: payment_sequential
+        description: Payment sequence number within the order.
+        data_tests:
+          - not_null
+
+      - name: payment_type
+        description: Payment method.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - credit_card
+                  - boleto
+                  - voucher
+                  - debit_card
+                  - not_defined
+
+      - name: payment_installments
+        description: Number of payment installments.
+
+      - name: payment_value
+        description: Payment value.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+  - name: fct_reviews
+    description: >
+      Review fact model built from staged Olist review records. One row
+      represents one review_id and includes review score, review text, review
+      timing, sentiment group, and source metadata.
+
+    columns:
+      - name: review_id
+        description: Review identifier.
+        data_tests:
+          - not_null
+
+      - name: order_id
+        description: Order identifier linked to fct_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: review_score
+        description: Customer review score from 1 to 5.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+
+      - name: review_comment_title
+        description: Optional review title.
+
+      - name: review_comment_message
+        description: Optional review comment message.
+
+      - name: review_creation_date
+        description: Review creation timestamp.
+
+      - name: review_answer_timestamp
+        description: Review answer timestamp.
+
+      - name: review_creation_day
+        description: Review creation date.
+
+      - name: review_sentiment_group
+        description: Review score grouped into positive, neutral, or negative.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - positive
+                  - neutral
+                  - negative
+                  - unknown
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+  - name: fct_supplier_product_updates
+    description: >
+      Supplier product update fact model built from staged supplier data. One row
+      represents one supplier product update record. This model preserves supplier
+      quality flags and adds a combined needs_business_review flag.
+
+    columns:
+      - name: supplier_id
+        description: Supplier identifier.
+        data_tests:
+          - not_null
+
+      - name: supplier_name
+        description: Supplier name.
+
+      - name: product_id
+        description: Product identifier. This may be null because the supplier source intentionally contains quality issues.
+
+      - name: supplier_product_code
+        description: Supplier-specific product code.
+
+      - name: updated_price
+        description: Cleaned supplier price.
+
+      - name: currency
+        description: Cleaned supplier currency.
+
+      - name: stock_status
+        description: Cleaned supplier stock status.
+
+      - name: valid_from
+        description: Cleaned valid-from date.
+
+      - name: last_updated_at
+        description: Cleaned supplier update timestamp.
+
+      - name: comments
+        description: Optional supplier comments.
+
+      - name: has_missing_product_id
+        description: Flag showing whether product_id is missing.
+
+      - name: has_missing_currency
+        description: Flag showing whether currency is missing.
+
+      - name: has_invalid_price
+        description: Flag showing whether updated_price could not be parsed.
+
+      - name: has_negative_price
+        description: Flag showing whether updated_price is negative.
+
+      - name: has_unknown_stock_status
+        description: Flag showing whether stock_status is outside accepted values.
+
+      - name: has_missing_valid_from
+        description: Flag showing whether valid_from is missing.
+
+      - name: has_invalid_valid_from
+        description: Flag showing whether valid_from could not be parsed.
+
+      - name: has_invalid_last_updated_at
+        description: Flag showing whether last_updated_at could not be parsed.
+
+      - name: is_duplicate_business_key
+        description: Flag showing whether the supplier business key is duplicated.
+
+      - name: needs_business_review
+        description: Combined flag showing whether any supplier quality issue exists.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.

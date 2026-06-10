@@ -1,0 +1,37 @@
+
+  create view "retail_analytics"."dbt_mart"."fct_order_items__dbt_tmp"
+    
+    
+  as (
+    with order_items as (
+
+    select *
+    from "retail_analytics"."dbt_staging"."stg_order_items"
+
+),
+
+final as (
+
+    select
+        order_id,
+        order_item_id,
+        product_id,
+        seller_id,
+
+        shipping_limit_date,
+        price,
+        freight_value,
+
+        price + freight_value as total_item_value,
+
+        source_file_name,
+        ingested_at,
+        run_date
+
+    from order_items
+
+)
+
+select *
+from final
+  );

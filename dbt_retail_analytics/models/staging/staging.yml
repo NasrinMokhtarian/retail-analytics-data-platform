@@ -1,0 +1,253 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: >
+      Staging model for Olist orders. This model standardizes order lifecycle
+      fields, casts timestamp columns, normalizes order status, and preserves
+      metadata columns from the raw PostgreSQL landing table.
+
+    columns:
+      - name: order_id
+        description: Unique identifier for each order.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Customer identifier linked to the customers source.
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: Normalized order lifecycle status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - delivered
+                  - shipped
+                  - canceled
+                  - unavailable
+                  - invoiced
+                  - processing
+                  - created
+                  - approved
+
+      - name: order_purchase_timestamp
+        description: Timestamp when the order was purchased.
+
+      - name: order_approved_at
+        description: Timestamp when the order was approved.
+
+      - name: order_delivered_carrier_date
+        description: Timestamp when the order was delivered to the carrier.
+
+      - name: order_delivered_customer_date
+        description: Timestamp when the order was delivered to the customer.
+
+      - name: order_estimated_delivery_date
+        description: Estimated delivery timestamp.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+  - name: stg_customers
+    description: >
+      Staging model for Olist customers. This model standardizes customer identifiers and geography
+      fields and preserves metadata columns from the raw PostgreSQL landing table.
+
+      columns:
+      - name: customer_id
+        description: Customer identifier used to join customers to orders.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_unique_id
+        description: Unique customer identity across orders.
+
+      - name: customer_zip_code_prefix
+        description: Customer zip code prefix.
+
+      - name: customer_city
+        description: Customer city.
+
+      - name: customer_state
+        description: Customer state abbreviation, standardized to uppercase.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: stg_order_items
+    description: >
+      Staging model for Olist order items. This model represents item-level
+      order records with product, seller, price, freight, shipping limit, and
+      metadata fields.
+
+    columns:
+      - name: order_id
+        description: Order identifier linked to stg_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: order_item_id
+        description: Item sequence number within an order.
+        data_tests:
+          - not_null
+
+      - name: product_id
+        description: Product identifier linked to the product source.
+        data_tests:
+          - not_null
+
+      - name: seller_id
+        description: Seller identifier linked to the seller source.
+        data_tests:
+          - not_null
+
+      - name: shipping_limit_date
+        description: Seller shipping deadline timestamp.
+
+      - name: price
+        description: Item price as numeric value.
+        data_tests:
+          - not_null
+
+      - name: freight_value
+        description: Freight value as numeric value.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+  - name: stg_products
+    description: >
+      Staging model for Olist products. This model casts product attributes,
+      preserves the original product category name, and keeps source metadata.
+
+    columns:
+      - name: product_id
+        description: Product identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_category_name
+        description: Original product category name from the Olist source.
+
+      - name: product_name_lenght
+        description: Product name length field from the original source. Original spelling is preserved.
+
+      - name: product_description_lenght
+        description: Product description length field from the original source. Original spelling is preserved.
+
+      - name: product_photos_qty
+        description: Number of product photos.
+
+      - name: product_weight_g
+        description: Product weight in grams.
+
+      - name: product_length_cm
+        description: Product length in centimeters.
+
+      - name: product_height_cm
+        description: Product height in centimeters.
+
+      - name: product_width_cm
+        description: Product width in centimeters.
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: stg_sellers
+    description: >
+      Staging model for Olist sellers. This model standardizes seller geography
+      fields and preserves metadata columns.
+
+    columns:
+      - name: seller_id
+        description: Seller identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: seller_zip_code_prefix
+        description: Seller zip code prefix.
+
+      - name: seller_city
+        description: Seller city.
+
+      - name: seller_state
+        description: Seller state abbreviation, standardized to uppercase.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.
+
+
+  - name: stg_product_category_translation
+    description: >
+      Staging model for product category translations. This model maps original
+      Olist product category names to English category names for business reporting.
+
+    columns:
+      - name: product_category_name
+        description: Original product category name.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_category_name_english
+        description: English product category name.
+        data_tests:
+          - not_null
+
+      - name: source_file_name
+        description: Original cleaned source file loaded into PostgreSQL.
+
+      - name: ingested_at
+        description: Timestamp when the cleaned file was generated or ingested.
+
+      - name: run_date
+        description: Logical pipeline run date.

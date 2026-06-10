@@ -1,0 +1,31 @@
+
+  create view "retail_analytics"."dbt_mart"."dim_sellers__dbt_tmp"
+    
+    
+  as (
+    with sellers as (
+
+    select *
+    from "retail_analytics"."dbt_staging"."stg_sellers"
+
+),
+
+final as (
+
+    select
+        seller_id,
+        seller_zip_code_prefix,
+        seller_city,
+        seller_state,
+
+        source_file_name,
+        ingested_at,
+        run_date
+
+    from sellers
+
+)
+
+select *
+from final
+  );
