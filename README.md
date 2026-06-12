@@ -5,9 +5,6 @@ A production-style, incremental data engineering project built around realistic 
 ---
 
 ## Project Purpose
-
-This project supports my transition into the data job market as a career changer with a technical background but no commercial data engineering experience yet.
-
 This repository is intentionally built incrementally.  
 It starts with local data ingestion, profiling, cleaning, and SQL practice before moving into PostgreSQL, dbt, Spark, orchestration, and cloud integration.
 
@@ -295,7 +292,6 @@ A cloud extension is planned later, but the foundation is built locally first to
 
 ---
 
-## Planned Next Phases
 
 ### Phase 3 — dbt Migration
 
@@ -348,6 +344,7 @@ Dashboard screenshots:
 ```
 screenshots/powerbi/
 ```
+## Planned Next Phases
 ### Phase 5 — Workflow Hardening
 
 Planned improvements:
