@@ -323,6 +323,31 @@ Possible tools:
 
 The BI layer should consume business-ready mart models, not raw tables.
 
+## Power BI Dashboard
+
+The project includes a Power BI dashboard built on top of the validated `dbt_mart` layer.
+
+Power BI does not connect to raw tables. It uses business-ready dbt mart views from PostgreSQL.
+
+Dashboard pages:
+
+| page | purpose |
+|---|---|
+| Executive Overview | High-level business KPIs and trends |
+| Revenue & Orders | Revenue, order volume, product categories, and customer states |
+| Product & Seller Performance | Product category and seller performance analysis |
+| Delivery & Reviews | Relationship between delivery performance and customer satisfaction |
+| Supplier Data Quality | Supplier records requiring business review |
+
+Dashboard file:
+
+```text
+powerbi/retail_analytics_dashboard.pbix
+```
+Dashboard screenshots:
+```
+screenshots/powerbi/
+```
 ### Phase 5 — Workflow Hardening
 
 Planned improvements:
