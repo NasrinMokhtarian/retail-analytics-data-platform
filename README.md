@@ -263,7 +263,7 @@ These findings show that the platform supports both technical data engineering w
 | Data processing  | pandas                                    |
 | Database         | PostgreSQL                                |
 | Database UI      | pgAdmin                                   |
-| Containerization | Docker Compose for PostgreSQL and pgAdmin |
+| Containerization | Docker Compose for PostgreSQL,pgAdmin and dbt |
 | SQL modeling     | PostgreSQL views                          |
 | Data quality     | Custom Python checks and SQL validation   |
 | Logging          | Structured logging                        |
