@@ -267,6 +267,7 @@ These findings show that the platform supports both technical data engineering w
 | SQL modeling     | PostgreSQL views                          |
 | Data quality     | Custom Python checks and SQL validation   |
 | Logging          | Structured logging                        |
+| Visualizing      | Power BI                                  |
 | Version control  | Git                                       |
 | Documentation    | Markdown                                  |
 
