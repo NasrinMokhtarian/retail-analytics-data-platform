@@ -403,7 +403,7 @@ It demonstrates:
 * documentation
 * Git-based incremental development
 
-The project is designed to support transition into junior or bridge data roles such as:
+This project demonstrates production-style data engineering and analytics capability across the full stack from source ingestion to BI reporting:
 
 * BI Developer
 * ETL Developer
