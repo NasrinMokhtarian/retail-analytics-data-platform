@@ -16,7 +16,7 @@ OUTPUT_COLUMNS = [
     "holiday_name",
     "holiday_local_name",
     "country_code",
-    "is_fixex",
+    "is_fixed",
     "is_global",
     "counties",
     "launch_year",

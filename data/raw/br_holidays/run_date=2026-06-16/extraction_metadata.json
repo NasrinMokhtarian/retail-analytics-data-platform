@@ -1,0 +1,29 @@
+[
+  {
+    "year": 2016,
+    "country_code": "BR",
+    "url": "https://date.nager.at/api/v3/PublicHolidays/2016/BR",
+    "output_file": "G:\\retail-analytics-data-platform\\data\\raw\\br_holidays\\run_date=2026-06-16\\br_public_holidays_2016.json",
+    "record_count": 14,
+    "status_code": 200,
+    "extracted_at": "2026-06-15T22:02:10.793966+00:00"
+  },
+  {
+    "year": 2017,
+    "country_code": "BR",
+    "url": "https://date.nager.at/api/v3/PublicHolidays/2017/BR",
+    "output_file": "G:\\retail-analytics-data-platform\\data\\raw\\br_holidays\\run_date=2026-06-16\\br_public_holidays_2017.json",
+    "record_count": 14,
+    "status_code": 200,
+    "extracted_at": "2026-06-15T22:02:10.793966+00:00"
+  },
+  {
+    "year": 2018,
+    "country_code": "BR",
+    "url": "https://date.nager.at/api/v3/PublicHolidays/2018/BR",
+    "output_file": "G:\\retail-analytics-data-platform\\data\\raw\\br_holidays\\run_date=2026-06-16\\br_public_holidays_2018.json",
+    "record_count": 14,
+    "status_code": 200,
+    "extracted_at": "2026-06-15T22:02:10.793966+00:00"
+  }
+]

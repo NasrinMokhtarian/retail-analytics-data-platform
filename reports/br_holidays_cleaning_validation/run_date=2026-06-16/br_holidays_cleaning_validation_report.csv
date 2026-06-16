@@ -1,0 +1,14 @@
+check_id,source_file,cleaned_file,check_type,severity,status,raw_row_count,cleaned_row_count,failed_count,total_count,message,validated_at
+BR_HOL_RAW_DIR_EXISTS_001,br_public_holidays_*.json,br_holidays_clean.csv,raw_run_directory_exists,error,PASS,,,0,1,Directory exists,2026-06-16T22:07:41.604764+00:00
+BR_HOL_CLEAN_EXISTS_001,br_public_holidays_*.json,br_holidays_clean.csv,cleaned_file_exists,error,PASS,,,0,1,File exists,2026-06-16T22:07:41.604764+00:00
+BR_HOL_RAW_FILE_SET_001,br_public_holidays_*.json,br_holidays_clean.csv,raw_file_set_matches_expected,error,PASS,,,0,3,"Expected raw holiday files exist for 2016, 2017, and 2018",2026-06-16T22:07:41.604764+00:00
+BR_HOL_CLEAN_READABLE_001,br_public_holidays_*.json,br_holidays_clean.csv,cleaned_file_readable,error,PASS,,42.0,0,1,Cleaned Brazil holidays file is readable,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_ROW_COUNT_001,br_public_holidays_*.json,br_holidays_clean.csv,row_count_matches,error,PASS,42.0,42.0,0,1,Raw and cleaned Brazil holidays row counts match,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_NOT_EMPTY_001,br_public_holidays_*.json,br_holidays_clean.csv,cleaned_file_not_empty,error,PASS,,42.0,0,1,Cleaned Brazil holidays file is not empty,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_REQUIRED_COLUMNS_001,br_public_holidays_*.json,br_holidays_clean.csv,required_columns_exist,error,PASS,,42.0,0,13,All required Brazil holidays cleaned columns exist,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_RUN_DATE_001,br_public_holidays_*.json,br_holidays_clean.csv,run_date_values_match,error,PASS,,42.0,0,42,All run_date values match expected run_date,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_COUNTRY_CODE_001,br_public_holidays_*.json,br_holidays_clean.csv,country_code_values_match,error,PASS,,42.0,0,42,All country_code values are BR,2026-06-16T22:07:41.619096+00:00
+BR_HOL_CLEAN_SOURCE_FILE_NAME_001,br_public_holidays_*.json,br_holidays_clean.csv,source_file_name_values_expected,error,PASS,,42.0,0,3,Cleaned source_file_name values match expected raw files,2026-06-16T22:07:41.623598+00:00
+BR_HOL_CLEAN_REQUIRED_FIELDS_NOT_NULL_001,br_public_holidays_*.json,br_holidays_clean.csv,required_fields_not_null,error,PASS,,42.0,0,168,Required Brazil holidays fields have no null or blank values,2026-06-16T22:07:41.623598+00:00
+BR_HOL_CLEAN_DATE_FIELDS_PARSEABLE_001,br_public_holidays_*.json,br_holidays_clean.csv,date_fields_parseable,error,PASS,,42.0,0,84,Date fields are parseable,2026-06-16T22:07:41.626215+00:00
+BR_HOL_CLEAN_EXTRACTED_AT_PARSEABLE_001,br_public_holidays_*.json,br_holidays_clean.csv,extracted_at_parseable,warning,PASS,,42.0,0,42,extracted_at values are parseable,2026-06-16T22:07:41.626215+00:00

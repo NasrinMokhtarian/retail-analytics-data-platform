@@ -36,7 +36,14 @@ POSTGRES_VALIDATION_REPORT_DIR = REPORTS_DIR / "postgres_validation"
 
 DEFAULT_CHUNK_SIZE = 100_000
 DEFAULT_SAMPLE_VALUES_LIMIT = 5
+
 NAGER_PUBLIC_HOLIDAYS_URL = ("https://date.nager.at/api/v3/PublicHolidays/{year}/{country_code}")
+
 DEFAULT_BR_HOLIDAYS_CLEAN_FILE = "br_holidays_clean.csv"
+
 EXPECTED_COUNTRY_CODE = 'BR'
 EXPECTED_HOLIDAY_YEARS = {2016,2017,2018}
+
+BR_HOLIDAYS_CLEAN_OUTPUT_FILE = "br_holidays_clean.csv"
+
+RAW_FILE_PATTERN = "br_public_holidays_*.json"
