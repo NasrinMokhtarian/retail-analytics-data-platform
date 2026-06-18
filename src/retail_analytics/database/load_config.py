@@ -5,7 +5,10 @@ from retail_analytics.cleaning.supplier_rules import SUPPLIER_CLEAN_OUTPUT_FILE
 from retail_analytics.config import (
     OLIST_CLEAN_DATA_DIR,
     SUPPLIER_CLEAN_DATA_DIR,
+    BR_HOLIDAYS_CLEAN_DATA_DIR,
+    BR_HOLIDAYS_CLEAN_OUTPUT_FILE
 )
+
 
 @dataclass(frozen=True)
 class PostgresLoadTarget:
@@ -55,13 +58,53 @@ def build_supplier_load_targets(supplier_run_date: str) -> list[PostgresLoadTarg
             target_table="supplier_product_updates",
         )
     ]
+def build_br_holidays_load_targets(br_holidays_run_date: str)-> list[PostgresLoadTarget]:
+ cleaned_run_dir = BR_HOLIDAYS_CLEAN_DATA_DIR / f"run_date={br_holidays_run_date}"
+
+ return[
+     PostgresLoadTarget(
+            source_name="br_holidays",
+            source_run_date=br_holidays_run_date,
+            source_file=BR_HOLIDAYS_CLEAN_OUTPUT_FILE,
+            cleaned_file_path=cleaned_run_dir / BR_HOLIDAYS_CLEAN_OUTPUT_FILE,
+            target_schema="raw",
+            target_table="br_holidays",
+        )
+ ]
+
+def build_selected_load_targets(
+    selected_sources: list[str],
+    olist_run_date: str | None = None,
+    supplier_run_date: str | None = None,
+    br_holidays_run_date: str | None = None,
+) -> list[PostgresLoadTarget]:
+    load_targets: list[PostgresLoadTarget] = []
+
+    if "olist" in selected_sources:
+        if olist_run_date is None:
+            raise ValueError("--olist-run-date is required when loading olist")
+        load_targets.extend(build_olist_load_targets(olist_run_date))
+
+    if "supplier" in selected_sources:
+        if supplier_run_date is None:
+            raise ValueError("--supplier-run-date is required when loading supplier")
+        load_targets.extend(build_supplier_load_targets(supplier_run_date))
+
+    if "br_holidays" in selected_sources:
+        if br_holidays_run_date is None:
+            raise ValueError("--br-holidays-run-date is required when loading br_holidays")
+        load_targets.extend(build_br_holidays_load_targets(br_holidays_run_date))
+
+    return load_targets
 def build_all_load_targets(
     olist_run_date: str,
     supplier_run_date: str,
+    br_holidays_run_date: str
 ) -> list[PostgresLoadTarget]:
     return [
         *build_olist_load_targets(olist_run_date=olist_run_date),
         *build_supplier_load_targets(supplier_run_date=supplier_run_date),
+        *build_br_holidays_load_targets(br_holidays_run_date=br_holidays_run_date)
     ]
 
 def validate_load_target_files_exist(load_targets: list[PostgresLoadTarget]) -> None:

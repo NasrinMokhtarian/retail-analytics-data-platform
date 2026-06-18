@@ -4,15 +4,24 @@ from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
 from psycopg2 import sql
+from sqlalchemy import inspect, text
 from retail_analytics.database.connection import  get_postgres_connection,get_sqlalchemy_engine
 
-from retail_analytics.database.load_config import PostgresLoadTarget,build_all_load_targets,validate_load_target_files_exist
+from retail_analytics.database.load_config import (PostgresLoadTarget,
+                                                   build_all_load_targets,
+                                                   validate_load_target_files_exist,
+                                                   build_selected_load_targets
+                                                   )
+
 
 logger = logging.getLogger(__name__)
 
+def quote_identifier(identifier: str) -> str:
+    return '"' + identifier.replace('"', '""') + '"'
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
+
 def count_table_rows(target_schema: str, target_table: str) -> int:
     with get_postgres_connection() as conn:
         with conn.cursor() as cursor:
@@ -94,15 +103,59 @@ def load_single_target(load_target: PostgresLoadTarget) -> None:
 
         engine = get_sqlalchemy_engine()
 
-        df.to_sql(
-            name=load_target.target_table,
-            con=engine,
-            schema=load_target.target_schema,
-            if_exists="replace",
-            index=False,
-            method="multi",
-            chunksize=10_000,
-        )
+        with engine.begin() as connection:
+            inspector = inspect(connection)
+
+            table_exists = inspector.has_table(
+                load_target.target_table,
+                schema=load_target.target_schema,
+            )
+
+            if table_exists:
+                truncate_sql = (
+                    f"TRUNCATE TABLE "
+                    f"{quote_identifier(load_target.target_schema)}."
+                    f"{quote_identifier(load_target.target_table)}"
+                )
+
+                logger.info(
+                    "Target table exists; truncating before reload",
+                    extra={
+                        "target_schema": load_target.target_schema,
+                        "target_table": load_target.target_table,
+                    },
+                )
+
+                connection.execute(text(truncate_sql))
+
+                df.to_sql(
+                    name=load_target.target_table,
+                    con=connection,
+                    schema=load_target.target_schema,
+                    if_exists="append",
+                    index=False,
+                    method="multi",
+                    chunksize=10_000,
+                )
+
+            else:
+                logger.info(
+                    "Target table does not exist; creating table",
+                    extra={
+                        "target_schema": load_target.target_schema,
+                        "target_table": load_target.target_table,
+                    },
+                )
+
+                df.to_sql(
+                    name=load_target.target_table,
+                    con=connection,
+                    schema=load_target.target_schema,
+                    if_exists="fail",
+                    index=False,
+                    method="multi",
+                    chunksize=10_000,
+                )
 
         loaded_row_count = count_table_rows(
             target_schema=load_target.target_schema,
@@ -178,19 +231,57 @@ def load_single_target(load_target: PostgresLoadTarget) -> None:
         raise
 
 
-def load_cleaned_files_to_postgres(olist_run_date: str,supplier_run_date: str) -> None:
-    load_targets = build_all_load_targets(
+# def load_cleaned_files_to_postgres(olist_run_date: str,supplier_run_date: str,br_holidays_run_date:str) -> None:
+    # load_targets = build_all_load_targets(
+    #     olist_run_date=olist_run_date,
+    #     supplier_run_date=supplier_run_date,
+    #     br_holidays_run_date=br_holidays_run_date,
+    # )
+
+    # validate_load_target_files_exist(load_targets)
+
+    # logger.info(
+    #     "PostgreSQL cleaned files load started",
+    #     extra={
+    #         "olist_run_date": olist_run_date,
+    #         "supplier_run_date": supplier_run_date,
+    #         "br_holidays_run_date": br_holidays_run_date,
+    #         "load_target_count": len(load_targets),
+    #     },
+    # )
+
+    # for load_target in load_targets:
+    #     load_single_target(load_target)
+
+    # logger.info(
+    #     "PostgreSQL cleaned file load completed successfully",
+    #     extra={"load_target_count": len(load_targets)},
+    # )
+def load_cleaned_files_to_postgres(
+    olist_run_date: str | None = None,
+    supplier_run_date: str | None = None,
+    br_holidays_run_date: str | None = None,
+    selected_sources: list[str] | None = None,
+) -> None:
+    if selected_sources is None:
+        selected_sources = ["olist", "supplier", "br_holidays"]
+
+    load_targets = build_selected_load_targets(
+        selected_sources=selected_sources,
         olist_run_date=olist_run_date,
         supplier_run_date=supplier_run_date,
+        br_holidays_run_date=br_holidays_run_date,
     )
 
     validate_load_target_files_exist(load_targets)
 
     logger.info(
-        "PostgreSQL cleaned file load started",
+        "PostgreSQL cleaned files load started",
         extra={
+            "selected_sources": selected_sources,
             "olist_run_date": olist_run_date,
             "supplier_run_date": supplier_run_date,
+            "br_holidays_run_date": br_holidays_run_date,
             "load_target_count": len(load_targets),
         },
     )
@@ -200,5 +291,8 @@ def load_cleaned_files_to_postgres(olist_run_date: str,supplier_run_date: str) -
 
     logger.info(
         "PostgreSQL cleaned file load completed successfully",
-        extra={"load_target_count": len(load_targets)},
+        extra={
+            "selected_sources": selected_sources,
+            "load_target_count": len(load_targets),
+        },
     )

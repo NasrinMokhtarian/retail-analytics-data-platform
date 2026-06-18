@@ -3,7 +3,7 @@ version: 2
 models:
   - name: stg_orders
     description: >
-      Staging model for Olist orders. This model standardizes order lifecycle
+      Staging model for orders. This model standardizes order lifecycle
       fields, casts timestamp columns, normalizes order status, and preserves
       metadata columns from the raw PostgreSQL landing table.
 
@@ -61,10 +61,10 @@ models:
 
   - name: stg_customers
     description: >
-      Staging model for Olist customers. This model standardizes customer identifiers and geography
+      Staging model for customers. This model standardizes customer identifiers and geography
       fields and preserves metadata columns from the raw PostgreSQL landing table.
 
-      columns:
+    columns:
       - name: customer_id
         description: Customer identifier used to join customers to orders.
         data_tests:
@@ -97,7 +97,7 @@ models:
 
   - name: stg_order_items
     description: >
-      Staging model for Olist order items. This model represents item-level
+      Staging model for order items. This model represents item-level
       order records with product, seller, price, freight, shipping limit, and
       metadata fields.
 
@@ -149,7 +149,7 @@ models:
         description: Logical pipeline run date.
   - name: stg_products
     description: >
-      Staging model for Olist products. This model casts product attributes,
+      Staging model for products. This model casts product attributes,
       preserves the original product category name, and keeps source metadata.
 
     columns:
@@ -160,7 +160,7 @@ models:
           - unique
 
       - name: product_category_name
-        description: Original product category name from the Olist source.
+        description: Original product category name from the source.
 
       - name: product_name_lenght
         description: Product name length field from the original source. Original spelling is preserved.
@@ -195,7 +195,7 @@ models:
 
   - name: stg_sellers
     description: >
-      Staging model for Olist sellers. This model standardizes seller geography
+      Staging model for sellers. This model standardizes seller geography
       fields and preserves metadata columns.
 
     columns:
@@ -228,8 +228,8 @@ models:
 
   - name: stg_product_category_translation
     description: >
-      Staging model for product category translations. This model maps original
-      Olist product category names to English category names for business reporting.
+      Staging model for product category translations. This model maps the original
+      product category names to English category names for business reporting.
 
     columns:
       - name: product_category_name
@@ -251,3 +251,69 @@ models:
 
       - name: run_date
         description: Logical pipeline run date.
+
+  - name: stg_br_holidays
+    description: >
+      Staging model for Br public holidays from the Nager.Date API.
+      This model standardizes holiday dates, names, country code, boolean flags,
+      API metadata, and pipeline metadata.
+
+    columns:
+      - name: holiday_date
+        description: Public holiday date.
+        data_tests:
+          - not_null
+
+      - name: holiday_name
+        description: English holiday name.
+        data_tests:
+          - not_null
+
+      - name: holiday_local_name
+        description: Local Portuguese holiday name.
+
+      - name: country_code
+        description: Country code, standardized to uppercase.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - BR
+
+      - name: is_fixed
+        description: Boolean flag showing whether the holiday has a fixed date.
+
+      - name: is_global
+        description: Boolean flag showing whether the holiday applies nationally.
+
+      - name: counties
+        description: Regional subdivision values if provided by the API.
+
+      - name: launch_year
+        description: Holiday launch year if available.
+
+      - name: holiday_types
+        description: Holiday type classifications from the API.
+
+      - name: source_system
+        description: Source system name.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - nager_date
+
+      - name: source_file_name
+        description: Raw JSON file name used to create the record.
+        data_tests:
+          - not_null
+
+      - name: extracted_at
+        description: API extraction timestamp.
+
+      - name: run_date
+        description: Logical pipeline run date.
+        data_tests:
+          - not_null 
