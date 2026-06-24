@@ -526,3 +526,109 @@ models:
 
       - name: run_date
         description: Logical pipeline run date.
+  - name: fct_orders_holiday_context
+    description: >
+      Order-level business mart that enriches Olist orders with Brazil
+      public-holiday context from the Nager.Date API. One row represents one
+      order, with revenue, freight, delivery, review, and nearest-holiday
+      attributes for holiday-aware business analysis.
+
+    columns:
+      - name: order_id
+        description: Unique order identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Customer identifier linked to the order.
+
+      - name: order_status
+        description: Current status of the order.
+
+      - name: order_purchase_date
+        description: Date when the order was purchased.
+        data_tests:
+          - not_null
+
+      - name: order_year
+        description: Year extracted from order_purchase_date.
+
+      - name: order_month
+        description: Month extracted from order_purchase_date.
+
+      - name: order_day
+        description: Day extracted from order_purchase_date.
+
+      - name: order_item_count
+        description: Number of order-item rows linked to the order.
+
+      - name: order_item_revenue
+        description: Total product price value for the order, excluding freight.
+
+      - name: order_freight_value
+        description: Total freight value for the order.
+
+      - name: order_total_value
+        description: Total product and freight value for the order.
+
+      - name: is_delivered
+        description: Boolean flag indicating whether the order was delivered.
+
+      - name: days_to_customer_delivery
+        description: Number of days between purchase and customer delivery.
+
+      - name: delivery_delay_days
+        description: Number of days the order was delayed compared with estimated delivery.
+
+      - name: is_late_delivery
+        description: Boolean flag indicating whether the order was delivered late.
+
+      - name: review_count
+        description: Number of review records linked to the order.
+
+      - name: average_review_score
+        description: Average review score for the order.
+
+      - name: nearest_holiday_date
+        description: Nearest Brazil public holiday date within a seven-day window.
+
+      - name: nearest_holiday_name
+        description: English name of the nearest Brazil public holiday.
+
+      - name: nearest_holiday_local_name
+        description: Portuguese/local name of the nearest Brazil public holiday.
+
+      - name: nearest_holiday_group
+        description: Business-friendly group of the nearest public holiday.
+
+      - name: nearest_holiday_is_retail_relevant
+        description: Boolean flag indicating whether the nearest holiday is considered especially relevant for retail analysis.
+
+      - name: days_to_holiday
+        description: >
+          Difference in days between the order purchase date and the nearest
+          holiday. Positive means the order was before the holiday, negative
+          means the order was after the holiday, zero means the order was on
+          the holiday.
+
+      - name: absolute_days_to_holiday
+        description: Absolute number of days between the order purchase date and the nearest holiday.
+
+      - name: is_near_holiday
+        description: Boolean flag indicating whether the order was within seven days before or after a Brazil public holiday.
+
+      - name: is_holiday_date
+        description: Boolean flag indicating whether the order was placed exactly on a Brazil public holiday.
+
+      - name: holiday_window_type
+        description: Holiday timing classification for the order.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Non-holiday period
+                  - Holiday date
+                  - Before holiday
+                  - After holiday

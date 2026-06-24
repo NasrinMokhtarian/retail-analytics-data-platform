@@ -247,3 +247,19 @@ cd G:\retail-analytics-data-platform
 git add docs/bi_dashboard_notes.md powerbi/retail_analytics_dashboard.pbix
 git commit -m "Add Power BI dashboard and documentation"
 git push origin master
+
+## Holiday Impact Page
+
+The Holiday Impact page enriches Olist order data with Br public-holiday data from the Nager.Date API.
+
+The page is based on the dbt mart `dbt_mart.fct_orders_holiday_context`, which connects each order to the nearest Br public holiday within a seven-day window.
+
+The dashboard compares:
+
+- order volume by holiday window
+- revenue by holiday window
+- average review score by holiday window
+- late delivery rate by holiday window
+- top holidays by revenue
+
+This page demonstrates external API enrichment, dbt business modeling, and Power BI reporting on a holiday-aware retail analytics use case.
