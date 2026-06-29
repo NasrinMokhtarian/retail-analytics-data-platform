@@ -8,7 +8,7 @@ param (
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-Write-Host "Starting Brazil holidays local pipeline..." -ForegroundColor Cyan
+Write-Host "Starting Br holidays local pipeline..." -ForegroundColor Cyan
 Write-Host "Run date: $RunDate" -ForegroundColor Cyan
 
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -21,7 +21,7 @@ if (-not (Test-Path $PythonExe)) {
     throw "Python virtual environment not found at $PythonExe. Please create/activate the project venv first."
 }
 
-Write-Host "Step 1/6: Extract Brazil holidays API data" -ForegroundColor Yellow
+Write-Host "Step 1/6: Extract Br holidays API data" -ForegroundColor Yellow
 & $PythonExe -m retail_analytics.cli.br_holidays_extract `
     --run-date $RunDate `
     --log-level $LogLevel
@@ -31,17 +31,31 @@ Write-Host "Step 2/6: Clean Brazil holidays data" -ForegroundColor Yellow
     --run-date $RunDate `
     --log-level $LogLevel
 
-Write-Host "Step 3/6: Run Brazil holidays quality checks" -ForegroundColor Yellow
+Write-Host "Step 3/6: Run Br holidays quality checks" -ForegroundColor Yellow
 & $PythonExe -m retail_analytics.cli.br_holidays_quality `
     --run-date $RunDate `
     --log-level $LogLevel
 
-Write-Host "Step 4/6: Run Brazil holidays cleaning validation" -ForegroundColor Yellow
+$QualityReportPath = ".\reports\br_holidays_quality\run_date=$RunDate\br_holidays_quality_checks.csv"
+
+Write-Host "Quality gate: checking Br holidays quality report" -ForegroundColor Yellow
+& $PythonExe -m retail_analytics.cli.check_report_gates `
+    --report-path $QualityReportPath `
+    --log-level $LogLevel
+
+Write-Host "Step 4/6: Run Br holidays cleaning validation" -ForegroundColor Yellow
 & $PythonExe -m retail_analytics.cli.br_holidays_cleaning_validation `
     --run-date $RunDate `
     --log-level $LogLevel
 
-Write-Host "Step 5/6: Load Brazil holidays into PostgreSQL" -ForegroundColor Yellow
+$ValidationReportPath = ".\reports\br_holidays_cleaning_validation\run_date=$RunDate\br_holidays_cleaning_validation_report.csv"
+
+Write-Host "Validation gate: checking Br holidays validation report" -ForegroundColor Yellow
+& $PythonExe -m retail_analytics.cli.check_report_gates `
+    --report-path $ValidationReportPath `
+    --log-level $LogLevel
+
+Write-Host "Step 5/6: Load Br holidays into PostgreSQL" -ForegroundColor Yellow
 & $PythonExe -m retail_analytics.cli.load_cleaned_to_postgres `
     --br-holidays-run-date $RunDate `
     --only br_holidays `
