@@ -1,0 +1,30 @@
+version: 2
+
+exposures:
+  - name: retail_analytics_powerbi_dashboard
+    label: Retail Analytics Power BI Dashboard
+    type: dashboard
+    maturity: medium
+    description: >
+      Power BI dashboard for the Retail Analytics Data Platform. The dashboard
+      presents executive KPIs, revenue and order trends, product and seller
+      performance, delivery and review analysis, supplier data quality, and
+      holiday-aware order analysis.
+
+      The dashboard consumes dbt mart-layer models only. It does not connect
+      directly to raw source tables.
+
+    depends_on:
+      - ref('dim_customers')
+      - ref('dim_products')
+      - ref('dim_sellers')
+      - ref('fct_orders')
+      - ref('fct_order_items')
+      - ref('fct_payments')
+      - ref('fct_reviews')
+      - ref('fct_supplier_product_updates')
+      - ref('dim_br_holidays')
+      - ref('fct_orders_holiday_context')
+
+    owner:
+      name: Nasrin Mokhtarian
