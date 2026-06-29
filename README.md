@@ -345,6 +345,30 @@ Dashboard screenshots:
 ```
 screenshots/powerbi/
 ```
+## Local Workflow Automation
+
+The project now includes local task runners that make the platform repeatable before adding Airflow orchestration.
+
+### Full Local Platform Refresh
+
+Script:
+
+```text
+scripts/run_local_full_refresh.ps1
+```
+##
+This runner refreshes the full local platform:
+PostgreSQL schemas
+→ audit tables
+→ cleaned-file mapping validation
+→ Olist raw loading
+→ supplier raw loading
+→ Br holidays raw loading
+→ PostgreSQL load validation
+→ validation gate
+→ dbt build
+→ pipeline audit
+
 ## Planned Next Phases
 ### Phase 5 — Workflow Hardening
 
