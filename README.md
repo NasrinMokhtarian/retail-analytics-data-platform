@@ -380,6 +380,28 @@ Planned improvements:
 * repeatable local workflow commands
 * Docker refinement
 
+
+## Testing and CI
+
+The project includes lightweight automated tests using `pytest`.
+
+The tests cover:
+
+- strict run-date validation
+- report-gate behavior
+- PostgreSQL load-target selection
+- Brazil holidays normalization logic
+
+GitHub Actions CI runs automatically on push and pull requests to `master`.
+
+The CI workflow performs:
+
+```text
+install project dependencies
+→ run Python tests
+→ run dbt parse
+```
+
 ### Phase 6 — Orchestration
 
 Airflow will be added after the individual jobs are stable.
