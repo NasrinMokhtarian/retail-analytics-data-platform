@@ -72,7 +72,7 @@ The project is not only a technical pipeline. It is designed to connect engineer
 
 | Source                             | Type                              | Purpose                                                   | Status      |
 | ---------------------------------- | --------------------------------- | --------------------------------------------------------- | ----------- |
-| Olist  E-Commerce Dataset | CSV / transactional-style dataset | Main retail/e-commerce operational data                   | Implemented |
+|Retail E-Commerce  Dataset | CSV / transaction dataset | Main retail/e-commerce operational data                   | Implemented |
 | Supplier product updates           | Handmade messy business file      | Simulates supplier/business data quality issues           | Implemented |
 | public holidays             | External API via Nager.Date       | Enriches  order data with public-holiday context | Implemented |
 
@@ -81,7 +81,7 @@ The project is not only a technical pipeline. It is designed to connect engineer
 ## Current Architecture
 
 ```text
-Olist CSV files
+Tailor Commercial CSV files
 Supplier business file
 Holidays API
         ↓
@@ -172,7 +172,7 @@ extract / land raw data
 
 This pattern has been applied to:
 
-* Olist e-commerce data
+* Retail e-commerce data
 * supplier product updates
 * Public holidays API data
 
@@ -180,9 +180,9 @@ This pattern has been applied to:
 
 ## Implemented Pipelines
 
-### Olist E-Commerce Data
+### Retail E-Commerce Data
 
-The Olist dataset is used as the main e-commerce operational dataset.
+The retail dataset is used as the main e-commerce operational dataset.
 
 It includes:
 
@@ -317,7 +317,7 @@ Purpose:
 create PostgreSQL schemas
 → create audit tables
 → validate cleaned-file mappings
-→ load Olist raw tables
+→ load retail raw tables
 → load supplier raw table
 → load public holidays raw table
 → validate PostgreSQL loads
@@ -482,7 +482,7 @@ Cloud services are planned later, but the foundation is built locally first to a
 Completed:
 
 * local source onboarding
-* Olist cleaning and validation
+* retail dataset cleaning and validation
 * supplier source simulation, cleaning, and validation
 * Public holidays API extraction, cleaning, and validation
 * PostgreSQL raw loading
@@ -560,7 +560,7 @@ Terraform will be used to manage infrastructure safely and support budget contro
 
 This project is not presented as an enterprise production platform.
 
-It is a production-style local data engineering and analytics platform designed to simulate realistic commercial workflows.
+It is a production-style local data engineering and analytics platform designed to enigineer realistic commercial workflows and pipelines.
 
 It demonstrates:
 
