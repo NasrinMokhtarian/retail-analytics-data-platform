@@ -1,154 +1,206 @@
 # Retail Analytics Data Platform
 
-A production, incremental data engineering project built around realistic retail/e-commerce data workflows.
+A production-style local data engineering and analytics platform built around realistic retail and e-commerce workflows.
+
+This project demonstrates how raw business data can be onboarded, validated, cleaned, loaded into a local warehouse, transformed with dbt, monitored with audit tables and quality gates, tested with CI, and served to a Power BI dashboard.
 
 ---
 
 ## Project Purpose
-This repository is intentionally built incrementally.  
-It starts with local data ingestion, profiling, cleaning, and SQL practice before moving into PostgreSQL, dbt, Spark, orchestration, and cloud integration.
+
+This repository is built incrementally to simulate the kind of work performed in junior or bridge data roles such as:
+
+* Junior Data Engineer
+* Analytics Engineer
+* BI Developer
+* ETL Developer
+* SQL Developer
+* Data Analyst with Python and SQL
+
+The project starts locally to strengthen the fundamentals before moving into orchestration and cloud infrastructure.
+
+Current focus:
+
+```text
+source onboarding
+→ data profiling
+→ data quality checks
+→ cleaning
+→ cleaned output validation
+→ PostgreSQL raw loading
+→ load audit
+→ dbt staging and marts
+→ Power BI dashboard
+→ local workflow automation
+→ tests and CI
+```
+
+Planned later:
+
+```text
+Airflow orchestration
+→ AWS extension
+→ Terraform-managed infrastructure
+→ S3 / Glue / Redshift
+→ dbt on cloud warehouse
+```
 
 ---
 
 ## Business Context
 
-The project is a retail analytics data platform for an e-commerce business.
+The platform supports analysis for a retail/e-commerce business.
 
 The business wants to understand:
 
-- order volume,
-- customer behavior,
-- product performance,
-- seller performance,
-- delivery performance,
-- payment behavior,
-- customer reviews,
-- and operational data quality.
+* order volume
+* revenue trends
+* customer geography
+* product category performance
+* seller performance
+* delivery performance
+* payment behavior
+* customer reviews
+* supplier data quality
+* public-holiday impact on orders, delivery, revenue, and reviews
 
-The initial dataset is a  E-Commerce dataset, which contains realistic e-commerce data such as customers, orders, products, payments, sellers, reviews, and geolocation.
-
-Additional source types will be introduced gradually to simulate a more realistic data environment.
+The project is not only a technical pipeline. It is designed to connect engineering work to business questions.
 
 ---
 
 ## Data Sources
 
-### Current Source
-
-| Source | Type | Status |
-|---|---|---|
-| Commerce Dataset | CSV, API, transactional Database | In progress |
-
-### Planned Additional Sources
-
-| Source Type | Purpose |
-|---|---|
-| JSON API | Practice API extraction, JSON parsing, error handling, and incremental ingestion |
-| Messy Excel files | Simulate supplier/business files with inconsistent structure |
-| Semi-structured JSON data | Practice nested data handling, flattening, schema drift, and event-style data |
-
-The project starts with CSV files, but it is not intended to remain a CSV-only project.  
-The long-term goal is to build a repeatable source onboarding pattern that can support different source types.
-
----
-
-## Engineering Principles
-
-This project follows production thinking from the beginning, without adding unnecessary complexity too early.
-
-### Current Project Structure
-## Current Project Status
-
-The project has completed the local source onboarding, PostgreSQL loading, staging, mart modeling, and first business analysis workflow.
-
-Current status:
-
-```text
-Local source onboarding
-→ data profiling
-→ data quality checks
-→ cleaning
-→ cleaned output validation
-→ PostgreSQL loading
-→ load audit
-→ staging views
-→ mart views
-→ business analysis
-```
-
-This is  a **local production data platform** at first phase and then turns into a **cloud production system**.
-
-The project is intentionally built locally first to strengthen SQL, Python, data quality, modeling, debugging, and business-oriented thinking before adding cloud complexity.
-
-## dbt Transformation Layer
-
-The project now includes a dbt transformation layer on top of the PostgreSQL raw schema.
-
-The earlier manually written PostgreSQL staging and mart views were used as a validated SQL prototype. After validation, the transformation logic was migrated into dbt models.
-
-Current dbt flow:
-
-```text
-PostgreSQL raw tables
-→ dbt sources
-→ dbt staging models
-→ dbt mart models
-→ dbt tests
-→ dbt documentation and lineage
+| Source                             | Type                              | Purpose                                                   | Status      |
+| ---------------------------------- | --------------------------------- | --------------------------------------------------------- | ----------- |
+| Olist  E-Commerce Dataset | CSV / transactional-style dataset | Main retail/e-commerce operational data                   | Implemented |
+| Supplier product updates           | Handmade messy business file      | Simulates supplier/business data quality issues           | Implemented |
+| public holidays             | External API via Nager.Date       | Enriches  order data with public-holiday context | Implemented |
 
 ---
 
 ## Current Architecture
 
 ```text
-data/raw/
-    ├── olist/
-    └── suppliers/
-
-data/processed/
-    ├── olist_clean/
-    └── supplier_clean/
-
-PostgreSQL
-    ├── raw
-    ├── staging
-    ├── mart
-    └── audit
+Olist CSV files
+Supplier business file
+Holidays API
+        ↓
+Python ingestion / profiling / cleaning / quality / validation
+        ↓
+Cleaned local outputs
+        ↓
+PostgreSQL raw schema
+        ↓
+dbt staging models
+        ↓
+dbt mart models
+        ↓
+Power BI dashboard
 ```
-
-### Local File Layers
-
-| layer             | purpose                                                         |
-| ----------------- | --------------------------------------------------------------- |
-| `data/raw/`       | Original source files preserved unchanged                       |
-| `data/processed/` | Cleaned and validated local outputs                             |
-| `reports/`        | Inventory, profiling, quality, cleaning, and validation reports |
-| `docs/`           | Design decisions, findings, and project documentation           |
-
-### PostgreSQL Schemas
-
-| schema    | purpose                                                                 |
-| --------- | ----------------------------------------------------------------------- |
-| `raw`     | Database landing/source-like tables loaded from cleaned validated files |
-| `staging` | Typed and standardized SQL transformation views                         |
-| `mart`    | Business-facing analytical views                                        |
-| `audit`   | Load tracking and pipeline metadata                                     |
 
 ---
 
-## Sources Included
+## Repository Structure
 
-### 1. Olist E-Commerce Dataset
+```text
+data/
+  raw/                         # Original source files and API landing outputs
+  processed/                   # Cleaned and validated outputs
 
-The Olist dataset is used as the main e-commerce data source.
+dbt_retail_analytics/
+  models/
+    staging/                   # dbt staging models
+    marts/                     # dbt business-facing models
+    exposures.yml              # Power BI dashboard exposure
+  dbt_project.yml
 
-It includes customers, orders, order items, payments, reviews, products, sellers, geolocation, and product category translations.
+docs/                          # Project documentation and runbooks
+powerbi/                       # Power BI dashboard file
+reports/                       # Profiling, quality, validation, and load reports
+scripts/                       # Local task runners
+sql/                           # SQL scripts and reference queries
+src/retail_analytics/          # Python package
+tests/                         # Lightweight pytest tests
+.github/workflows/             # GitHub Actions CI
+```
 
-### 2. Handmade Supplier Product Updates
+Generated dbt artifacts such as `dbt_retail_analytics/target/` should not be committed.
 
-A handmade supplier source was added to simulate a realistic messy business file.
+---
 
-It includes issues such as:
+## Local File Layers
+
+| Layer             | Purpose                                                                |
+| ----------------- | ---------------------------------------------------------------------- |
+| `data/raw/`       | Original source files and raw API landing outputs                      |
+| `data/processed/` | Cleaned and validated outputs                                          |
+| `reports/`        | Inventory, profiling, quality, validation, and PostgreSQL load reports |
+| `docs/`           | Architecture notes, runbooks, source design, and project documentation |
+| `scripts/`        | Repeatable local task runners                                          |
+
+---
+
+## PostgreSQL Schemas
+
+| Schema        | Purpose                                                    |
+| ------------- | ---------------------------------------------------------- |
+| `raw`         | Source-like tables loaded from cleaned validated files     |
+| `staging`     | Earlier SQL prototype layer used before dbt migration      |
+| `mart`        | Earlier SQL prototype mart layer used before dbt migration |
+| `audit`       | Load audit and pipeline run metadata                       |
+| `dbt_staging` | dbt-managed staging models                                 |
+| `dbt_mart`    | dbt-managed business-facing models                         |
+
+---
+
+## Source Onboarding Pattern
+
+Each source follows a repeatable onboarding pattern:
+
+```text
+extract / land raw data
+→ inventory or profile
+→ quality checks
+→ clean / normalize
+→ cleaned output validation
+→ PostgreSQL raw load
+→ PostgreSQL load validation
+→ dbt source / staging / mart
+→ BI reporting
+→ documentation
+```
+
+This pattern has been applied to:
+
+* Olist e-commerce data
+* supplier product updates
+* Public holidays API data
+
+---
+
+## Implemented Pipelines
+
+### Olist E-Commerce Data
+
+The Olist dataset is used as the main e-commerce operational dataset.
+
+It includes:
+
+* customers
+* orders
+* order items
+* order payments
+* order reviews
+* products
+* sellers
+* geolocation
+* product category translation
+
+### Supplier Product Updates
+
+A handmade supplier source simulates realistic messy business data.
+
+It includes examples of:
 
 * missing product IDs
 * missing currency values
@@ -158,196 +210,98 @@ It includes issues such as:
 * invalid timestamps
 * duplicate business keys
 
-This source is used to practice realistic business-file ingestion, data quality checks, cleaning, and flagging.
+The supplier mart keeps problematic rows visible using quality flags and a `needs_business_review` indicator.
+
+### Public Holidays API
+
+Public holidays are extracted from the Nager.Date API and used to enrich the e-commerce data.
+
+The holiday source supports analysis such as:
+
+* order volume around public holidays
+* revenue around holiday windows
+* review score around holidays
+* late delivery rate around holidays
+* retail-relevant holiday grouping
 
 ---
 
-## Completed Engineering Workflow
+## dbt Transformation Layer
 
-### Source Onboarding and Cleaning
+The project uses dbt Core on top of PostgreSQL.
 
-Completed for Olist and supplier sources:
+Flow:
 
-* raw file inventory
-* column profiling
-* profile findings documentation
-* automated quality checks
-* quality findings documentation
-* cleaning rules
-* cleaning jobs
-* cleaned output validation
+```text
+PostgreSQL raw tables
+→ dbt sources
+→ dbt staging models
+→ dbt mart models
+→ dbt tests
+→ dbt documentation and lineage
+→ dbt exposure for Power BI
+```
 
-### PostgreSQL Loading
+Current important dbt models include:
 
-Cleaned and validated files are loaded into PostgreSQL using Python.
-
-The load process includes:
-
-* cleaned file to table mapping
-* full-refresh loading into the `raw` schema
-* row-count validation
-* load audit records in `audit.load_audit`
-* independent PostgreSQL load validation report
-
-### Staging Layer
-
-The `staging` schema contains typed and standardized SQL views.
-
-Examples:
-
-* `staging.stg_orders`
-* `staging.stg_order_items`
-* `staging.stg_customers`
-* `staging.stg_products`
-* `staging.stg_supplier_product_updates`
-
-The staging layer prepares data for analytical modeling by casting timestamps, numeric fields, booleans, and preserving business keys.
-
-### Mart Layer
-
-The `mart` schema contains business-facing analytical views.
-
-Current mart views:
-
-| mart view                           | purpose                                             |
-| ----------------------------------- | --------------------------------------------------- |
-| `mart.dim_customers`                | Customer geography and identity                     |
-| `mart.dim_products`                 | Product attributes and translated category          |
-| `mart.dim_sellers`                  | Seller identity and geography                       |
-| `mart.fct_orders`                   | Order lifecycle and delivery metrics                |
-| `mart.fct_order_items`              | Item-level revenue and seller/product relationships |
-| `mart.fct_payments`                 | Payment behavior                                    |
-| `mart.fct_reviews`                  | Review scores and sentiment grouping                |
-| `mart.fct_supplier_product_updates` | Supplier update records and quality flags           |
+| Model                          | Purpose                                    |
+| ------------------------------ | ------------------------------------------ |
+| `stg_orders`                   | Standardized order lifecycle data          |
+| `stg_order_items`              | Standardized item-level order data         |
+| `stg_customers`                | Customer identity and geography            |
+| `stg_products`                 | Product attributes and translated category |
+| `stg_sellers`                  | Seller identity and geography              |
+| `stg_order_payments`           | Payment data                               |
+| `stg_order_reviews`            | Review scores and sentiment preparation    |
+| `stg_supplier_product_updates` | Supplier update staging model              |
+| `stg_br_holidays`              | Public holidays staging model       |
+| `dim_customers`                | Customer dimension                         |
+| `dim_products`                 | Product dimension                          |
+| `dim_sellers`                  | Seller dimension                           |
+| `dim_br_holidays`              | Public-holiday dimension            |
+| `fct_orders`                   | Order lifecycle and delivery fact          |
+| `fct_order_items`              | Item-level revenue fact                    |
+| `fct_payments`                 | Payment fact                               |
+| `fct_reviews`                  | Review fact                                |
+| `fct_supplier_product_updates` | Supplier data-quality fact                 |
+| `fct_orders_holiday_context`   | Order-level holiday-aware business mart    |
 
 ---
-
-## Validation Gates Implemented
-
-The project includes validation at multiple stages:
-
-| stage                      | validation purpose                                                             |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| Raw quality checks         | Confirm source files and critical fields are usable                            |
-| Cleaned output validation  | Confirm cleaned files exist, preserve row counts, and contain metadata         |
-| PostgreSQL load validation | Confirm database tables match cleaned files and audit records                  |
-| Staging validation         | Confirm staging views preserve row counts, keys, types, and join readiness     |
-| Mart validation            | Confirm business-facing views respect grain, metrics, joins, and quality flags |
-
-This validation-first approach helps prevent silent data issues from reaching business analysis.
-
----
-
-## First Business Analysis Results
-
-The mart layer was used to answer first business questions around revenue, customers, products, delivery, reviews, payments, and supplier quality.
-
-Key findings:
-
-* November 2017 was the highest revenue month among the reviewed months, with item revenue of 1,010,271.37.
-* The highest revenue product categories were `health_beauty`, `watches_gifts`, `bed_bath_table`, `sports_leisure`, and `computers_accessories`.
-* SP was the dominant customer state by both item revenue and order count.
-* Late deliveries had a significantly lower average review score than non-late deliveries: 2.57 vs 4.29.
-* Credit card was the dominant payment method by total payment value.
-* Supplier records with quality issues remain visible through quality flags and the `needs_business_review` field.
-
-These findings show that the platform supports both technical data engineering workflows and business-facing analysis.
-
----
-
-## Current Technical Stack
-
-| area             | tools                                     |
-| ---------------- | ----------------------------------------- |
-| Programming      | Python                                    |
-| Data processing  | pandas                                    |
-| Database         | PostgreSQL                                |
-| Database UI      | pgAdmin                                   |
-| Containerization | Docker Compose for PostgreSQL,pgAdmin and dbt |
-| SQL modeling     | PostgreSQL views                          |
-| Data quality     | Custom Python checks and SQL validation   |
-| Logging          | Structured logging                        |
-| Visualizing      | Power BI                                  |
-| Version control  | Git                                       |
-| Documentation    | Markdown                                  |
-
----
-
-## Why This Project Is Built Locally First
-
-This project is intentionally built as a local production-style platform before moving to cloud.
-
-The goal is to strengthen:
-
-* SQL fluency
-* Python fluency
-* data quality thinking
-* source onboarding discipline
-* debugging confidence
-* relational modeling
-* business analysis
-* documentation habits
-* Git-based workflow
-
-A cloud extension is planned later, but the foundation is built locally first to avoid hiding weak data logic behind cloud tooling.
-
----
-
-
-### Phase 3 — dbt Migration
-
-The validated PostgreSQL staging and mart SQL will be migrated into dbt.
-
-Planned dbt work:
-
-* dbt sources
-* staging models
-* mart models
-* schema tests
-* relationship tests
-* accepted value tests
-* dbt documentation
-* lineage
-
-### Phase 4 — BI Layer
-
-A BI dashboard will be built on top of the mart layer.
-
-Possible tools:
-
-* Power BI
-* Tableau
-
-The BI layer should consume business-ready mart models, not raw tables.
 
 ## Power BI Dashboard
 
-The project includes a Power BI dashboard built on top of the validated `dbt_mart` layer.
-
-Power BI does not connect to raw tables. It uses business-ready dbt mart views from PostgreSQL.
-
-Dashboard pages:
-
-| page | purpose |
-|---|---|
-| Executive Overview | High-level business KPIs and trends |
-| Revenue & Orders | Revenue, order volume, product categories, and customer states |
-| Product & Seller Performance | Product category and seller performance analysis |
-| Delivery & Reviews | Relationship between delivery performance and customer satisfaction |
-| Supplier Data Quality | Supplier records requiring business review |
+The Power BI dashboard consumes the dbt mart layer only. It does not connect directly to raw tables.
 
 Dashboard file:
 
 ```text
 powerbi/retail_analytics_dashboard.pbix
 ```
+
 Dashboard screenshots:
-```
+
+```text
 screenshots/powerbi/
 ```
+
+Dashboard pages:
+
+| Page                         | Purpose                                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Executive Overview           | High-level business KPIs and trends                                                                    |
+| Revenue & Orders             | Revenue, order volume, product categories, and customer states                                         |
+| Product & Seller Performance | Product category and seller performance analysis                                                       |
+| Delivery & Reviews           | Relationship between delivery performance and customer satisfaction                                    |
+| Supplier Data Quality        | Supplier rows requiring business review                                                                |
+| Holiday Impact               | Holiday-aware revenue, order, review, and delivery analysis using public-holiday API enrichment |
+
+The Power BI dashboard is also documented as a dbt exposure.
+
+---
+
 ## Local Workflow Automation
 
-The project now includes local task runners that make the platform repeatable before adding Airflow orchestration.
+The project includes local task runners that make the platform repeatable before Airflow is introduced.
 
 ### Full Local Platform Refresh
 
@@ -356,30 +310,104 @@ Script:
 ```text
 scripts/run_local_full_refresh.ps1
 ```
-##
-This runner refreshes the full local platform:
-PostgreSQL schemas
-→ audit tables
-→ cleaned-file mapping validation
-→ Olist raw loading
-→ supplier raw loading
-→ Br holidays raw loading
-→ PostgreSQL load validation
+
+Purpose:
+
+```text
+create PostgreSQL schemas
+→ create audit tables
+→ validate cleaned-file mappings
+→ load Olist raw tables
+→ load supplier raw table
+→ load public holidays raw table
+→ validate PostgreSQL loads
+→ run PostgreSQL validation gate
+→ run dbt build
+→ record pipeline audit
+```
+
+Example command:
+
+```powershell
+.\scripts\run_local_full_refresh.ps1 `
+  -OlistRunDate 2026-05-26 `
+  -SupplierRunDate 2026-06-01 `
+  -BrHolidaysRunDate 2026-06-16
+```
+
+### Public Holidays API Refresh
+
+Script:
+
+```text
+scripts/run_br_holidays_pipeline.ps1
+```
+
+Purpose:
+
+```text
+extract public holidays API data
+→ clean
+→ quality checks
+→ quality gate
+→ cleaned output validation
 → validation gate
-→ dbt build
-→ pipeline audit
+→ load raw.br_holidays
+→ build holiday-aware dbt models
+→ record pipeline audit
+```
 
-## Planned Next Phases
-### Phase 5 — Workflow Hardening
+Example command:
 
-Planned improvements:
+```powershell
+.\scripts\run_br_holidays_pipeline.ps1 -RunDate 2026-06-16
+```
 
-* task runner or Makefile
-* improved test structure
-* stronger error handling
-* repeatable local workflow commands
-* Docker refinement
+---
 
+## Audit and Quality Gates
+
+The project includes two audit levels.
+
+| Audit table           | Purpose                        |
+| --------------------- | ------------------------------ |
+| `audit.pipeline_runs` | One row per pipeline execution |
+| `audit.load_audit`    | One row per raw-table load     |
+
+Validation and gate layers include:
+
+| Layer                      | Purpose                                                           |
+| -------------------------- | ----------------------------------------------------------------- |
+| raw quality checks         | Check source-level quality before cleaning                        |
+| cleaned output validation  | Confirm cleaned outputs exist and preserve expected structure     |
+| report gates               | Stop the pipeline on error-level validation failures              |
+| PostgreSQL load validation | Compare cleaned files, raw tables, and audit records              |
+| dbt tests                  | Validate staging and mart assumptions                             |
+| CI tests                   | Check selected Python logic and dbt project parsing on every push |
+
+---
+
+## PostgreSQL Recovery
+
+The project can recover from local PostgreSQL volume loss.
+
+Recovery process:
+
+```text
+start Docker/PostgreSQL
+→ recreate schemas and audit tables
+→ reload cleaned outputs into raw schema
+→ run dbt build
+→ refresh Power BI
+```
+
+Detailed recovery instructions are documented in:
+
+```text
+docs/postgres_recovery_runbook.md
+```
+
+---
 
 ## Testing and CI
 
@@ -387,12 +415,12 @@ The project includes lightweight automated tests using `pytest`.
 
 The tests cover:
 
-- strict run-date validation
-- report-gate behavior
-- PostgreSQL load-target selection
-- Brazil holidays normalization logic
+* strict run-date validation
+* report-gate behavior
+* PostgreSQL load-target selection
+* Public holidays normalization logic
 
-GitHub Actions CI runs automatically on push and pull requests to `master`.
+GitHub Actions CI runs automatically on pushes and pull requests to `master`.
 
 The CI workflow performs:
 
@@ -402,32 +430,129 @@ install project dependencies
 → run dbt parse
 ```
 
-### Phase 6 — Orchestration
+This validates both Python pipeline logic and dbt project structure before continuing development.
 
-Airflow will be added after the individual jobs are stable.
+---
 
-Airflow will orchestrate:
+## Current Technical Stack
 
-* source onboarding
-* quality checks
-* cleaning
-* validation
-* PostgreSQL loading
-* dbt transformations
+| Area                  | Tools                                               |
+| --------------------- | --------------------------------------------------- |
+| Programming           | Python                                              |
+| Data processing       | pandas                                              |
+| Database              | PostgreSQL                                          |
+| Database UI           | pgAdmin                                             |
+| Containerization      | Docker Compose                                      |
+| Transformation        | dbt Core                                            |
+| Business intelligence | Power BI                                            |
+| Data quality          | Custom Python checks, validation reports, dbt tests |
+| Workflow automation   | PowerShell task runners                             |
+| Audit                 | PostgreSQL audit tables                             |
+| Testing               | pytest                                              |
+| CI                    | GitHub Actions                                      |
+| Version control       | Git                                                 |
+| Documentation         | Markdown                                            |
 
-### Phase 7 — AWS Cloud Extension
+---
 
-A controlled AWS extension is planned later.
+## Why the Project Is Built Locally First
 
-Possible AWS components:
+The project is intentionally built as a local production-style platform before moving to cloud infrastructure.
 
-* S3 for raw/processed/curated zones
-* Parquet outputs
-* Glue or Athena for query/processing
-* Redshift if warehouse loading is added
-* CloudWatch for monitoring
+The goal is to strengthen:
 
-The cloud extension will build on the same workflow already proven locally.
+* SQL fluency
+* Python fluency
+* source onboarding discipline
+* data quality thinking
+* validation-first development
+* debugging confidence
+* relational modeling
+* dbt modeling
+* BI/dashboard communication
+* documentation habits
+* Git and CI workflow
+
+Cloud services are planned later, but the foundation is built locally first to avoid hiding weak data logic behind managed services.
+
+---
+
+## Current Status
+
+Completed:
+
+* local source onboarding
+* Olist cleaning and validation
+* supplier source simulation, cleaning, and validation
+* Public holidays API extraction, cleaning, and validation
+* PostgreSQL raw loading
+* table-level load audit
+* PostgreSQL load validation
+* dbt staging and mart models
+* dbt tests and docs
+* dbt exposure for Power BI
+* Power BI dashboard
+* local task runners
+* report gates
+* pipeline-level audit
+* PostgreSQL recovery runbook
+* pytest test suite
+* GitHub Actions CI
+
+In progress / next:
+
+* Airflow orchestration for the local platform
+* orchestration documentation
+* AWS and Terraform design
+* controlled AWS implementation
+
+---
+
+## Planned Next Phases
+
+### Phase 7 — Local Airflow Orchestration
+
+Airflow will be added after the local scripts are already stable.
+
+Initial Airflow scope:
+
+```text
+orchestrate existing working commands
+monitor task status
+show dependencies clearly
+avoid rewriting business logic inside DAGs
+```
+
+Airflow will not replace Python modules, dbt models, quality checks, or task runners. It will orchestrate them.
+
+### Phase 8 — AWS and Terraform Design
+
+Before creating cloud resources, the project will define:
+
+* AWS region
+* budget-control strategy
+* persistent vs temporary resources
+* S3 layout
+* IAM approach
+* Redshift Serverless approach
+* Glue/Athena usage
+* Terraform state strategy
+* daily destroy strategy for expensive resources
+
+### Phase 9 — AWS Implementation
+
+Planned AWS extension:
+
+```text
+local files / PostgreSQL exports
+→ S3 raw and processed zones
+→ Glue or PySpark transformations
+→ Athena or Redshift
+→ dbt on Redshift
+→ Power BI
+```
+
+Terraform will be used to manage infrastructure safely and support budget control.
 
 ---
 
@@ -435,26 +560,30 @@ The cloud extension will build on the same workflow already proven locally.
 
 This project is not presented as an enterprise production platform.
 
-It is a **production-style local data engineering and analytics platform** designed to simulate realistic commercial workflows.
+It is a production-style local data engineering and analytics platform designed to simulate realistic commercial workflows.
 
 It demonstrates:
 
 * source onboarding
+* API extraction
 * data profiling
 * data quality checks
 * cleaning and validation
 * PostgreSQL loading
 * audit logging
-* staging and mart modeling
-* business analysis
+* dbt modeling
+* business mart design
+* Power BI reporting
 * documentation
-* Git-based incremental development
+* testing
+* CI
+* repeatable local workflows
 
-This project demonstrates production-style data engineering and analytics capability across the full stack from source ingestion to BI reporting:
+The project is designed to support transition into junior or bridge data roles such as:
 
 * BI Developer
 * ETL Developer
 * Junior Analytics Engineer
 * SQL Developer
 * Data Analyst with Python/SQL
-* Data Engineer
+* Junior Data Engineer

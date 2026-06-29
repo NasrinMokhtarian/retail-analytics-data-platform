@@ -1,12 +1,28 @@
+# Python
 .venv/
+venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+# Environment files
 
 .env
 data/row/
 data/cleaning/
 data/processed/
 # scripts/
+
+# Jupyter / OS
 .ipynb_checkpoints
 .DS_Store
+# Logs
+logs/
 Logs/
+
+# dbt generated artifacts
+dbt_retail_analytics/target/
+dbt_retail_analytics/logs/
+dbt_retail_analytics/dbt_packages/
+
+# Local processed outputs
+data/processed/
