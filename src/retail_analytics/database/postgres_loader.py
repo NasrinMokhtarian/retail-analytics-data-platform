@@ -1,14 +1,13 @@
 import logging
 from dataclasses import asdict
 from datetime import datetime, timezone
-from pathlib import Path
+# from pathlib import Path
 import pandas as pd
 from psycopg2 import sql
 from sqlalchemy import inspect, text
 from retail_analytics.database.connection import  get_postgres_connection,get_sqlalchemy_engine
 
 from retail_analytics.database.load_config import (PostgresLoadTarget,
-                                                   build_all_load_targets,
                                                    validate_load_target_files_exist,
                                                    build_selected_load_targets
                                                    )
@@ -231,32 +230,7 @@ def load_single_target(load_target: PostgresLoadTarget) -> None:
         raise
 
 
-# def load_cleaned_files_to_postgres(olist_run_date: str,supplier_run_date: str,br_holidays_run_date:str) -> None:
-    # load_targets = build_all_load_targets(
-    #     olist_run_date=olist_run_date,
-    #     supplier_run_date=supplier_run_date,
-    #     br_holidays_run_date=br_holidays_run_date,
-    # )
 
-    # validate_load_target_files_exist(load_targets)
-
-    # logger.info(
-    #     "PostgreSQL cleaned files load started",
-    #     extra={
-    #         "olist_run_date": olist_run_date,
-    #         "supplier_run_date": supplier_run_date,
-    #         "br_holidays_run_date": br_holidays_run_date,
-    #         "load_target_count": len(load_targets),
-    #     },
-    # )
-
-    # for load_target in load_targets:
-    #     load_single_target(load_target)
-
-    # logger.info(
-    #     "PostgreSQL cleaned file load completed successfully",
-    #     extra={"load_target_count": len(load_targets)},
-    # )
 def load_cleaned_files_to_postgres(
     olist_run_date: str | None = None,
     supplier_run_date: str | None = None,

@@ -96,16 +96,7 @@ def build_selected_load_targets(
         load_targets.extend(build_br_holidays_load_targets(br_holidays_run_date))
 
     return load_targets
-def build_all_load_targets(
-    olist_run_date: str,
-    supplier_run_date: str,
-    br_holidays_run_date: str
-) -> list[PostgresLoadTarget]:
-    return [
-        *build_olist_load_targets(olist_run_date=olist_run_date),
-        *build_supplier_load_targets(supplier_run_date=supplier_run_date),
-        *build_br_holidays_load_targets(br_holidays_run_date=br_holidays_run_date)
-    ]
+
 
 def validate_load_target_files_exist(load_targets: list[PostgresLoadTarget]) -> None:
     missing_files = [
