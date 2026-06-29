@@ -6,7 +6,7 @@ __pycache__/
 data/row/
 data/cleaning/
 data/processed/
-#scripts/
+scripts/
 .ipynb_checkpoints
 .DS_Store
 Logs/

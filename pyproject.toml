@@ -1,6 +1,6 @@
 [project]
 name = "retail-analytics-data-platform"
-version = "0.1.0"
+version = "0.2.0"
 description = "Retail analytics data platform for local ingestion, cleaning, modeling, and analytics practice."
 requires-python = ">=3.10"
 
@@ -9,3 +9,8 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

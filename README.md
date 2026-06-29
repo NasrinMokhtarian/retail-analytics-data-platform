@@ -1,6 +1,6 @@
 # Retail Analytics Data Platform
 
-A production-style, incremental data engineering project built around realistic retail/e-commerce data workflows.
+A production, incremental data engineering project built around realistic retail/e-commerce data workflows.
 
 ---
 
@@ -54,7 +54,7 @@ The long-term goal is to build a repeatable source onboarding pattern that can s
 
 ## Engineering Principles
 
-This project follows production-style thinking from the beginning, without adding unnecessary complexity too early.
+This project follows production thinking from the beginning, without adding unnecessary complexity too early.
 
 ### Current Project Structure
 ## Current Project Status
@@ -76,7 +76,7 @@ Local source onboarding
 → business analysis
 ```
 
-This is currently a **local production-style data platform**, not yet a cloud production system.
+This is  a **local production data platform** at first phase and then turns into a **cloud production system**.
 
 The project is intentionally built locally first to strengthen SQL, Python, data quality, modeling, debugging, and business-oriented thinking before adding cloud complexity.
 
