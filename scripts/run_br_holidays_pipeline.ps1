@@ -16,83 +16,98 @@ Set-Location $ProjectRoot
 
 $PythonExe = ".\.venv\Scripts\python.exe"
 $DbtExe = "..\.venv\Scripts\dbt.exe"
+$PipelineRunId = $null
 
 if (-not (Test-Path $PythonExe)) {
     throw "Python virtual environment not found at $PythonExe. Please create/activate the project venv first."
 }
 
-Write-Host "Step 1/6: Extract Br holidays API data" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.br_holidays_extract `
-    --run-date $RunDate `
-    --log-level $LogLevel
+try {
+    Write-Host "Creating pipeline audit record..." -ForegroundColor Cyan
 
-Write-Host "Step 2/6: Clean Brazil holidays data" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.br_holidays_cleaning `
-    --run-date $RunDate `
-    --log-level $LogLevel
+    $PipelineRunId = (& $PythonExe -m retail_analytics.cli.pipeline_audit start `
+        --pipeline-name "br_holidays_local_pipeline" `
+        --run-date $RunDate `
+        --selected-source br_holidays).Trim()
 
-Write-Host "Step 3/6: Run Br holidays quality checks" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.br_holidays_quality `
-    --run-date $RunDate `
-    --log-level $LogLevel
+    Write-Host "Pipeline run ID: $PipelineRunId" -ForegroundColor Cyan
 
-$QualityReportPath = ".\reports\br_holidays_quality\run_date=$RunDate\br_holidays_quality_checks.csv"
+    Write-Host "Step 1/8: Extract Br holidays API data" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.br_holidays_extract `
+        --run-date $RunDate `
+        --log-level $LogLevel
 
-Write-Host "Quality gate: checking Br holidays quality report" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.check_report_gates `
-    --report-path $QualityReportPath `
-    --log-level $LogLevel
+    Write-Host "Step 2/8: Clean Br holidays data" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.br_holidays_cleaning `
+        --run-date $RunDate `
+        --log-level $LogLevel
 
-Write-Host "Step 4/6: Run Br holidays cleaning validation" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.br_holidays_cleaning_validation `
-    --run-date $RunDate `
-    --log-level $LogLevel
+    Write-Host "Step 3/8: Run Br holidays quality checks" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.br_holidays_quality `
+        --run-date $RunDate `
+        --log-level $LogLevel
 
-$ValidationReportPath = ".\reports\br_holidays_cleaning_validation\run_date=$RunDate\br_holidays_cleaning_validation_report.csv"
+    $QualityReportPath = ".\reports\br_holidays_quality\run_date=$RunDate\br_holidays_quality_checks.csv"
 
-Write-Host "Validation gate: checking Br holidays validation report" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.check_report_gates `
-    --report-path $ValidationReportPath `
-    --log-level $LogLevel
+    Write-Host "Step 4/8: Quality gate" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.check_report_gates `
+        --report-path $QualityReportPath `
+        --log-level $LogLevel
 
-Write-Host "Step 5/6: Load Br holidays into PostgreSQL" -ForegroundColor Yellow
-& $PythonExe -m retail_analytics.cli.load_cleaned_to_postgres `
-    --br-holidays-run-date $RunDate `
-    --only br_holidays `
-    --log-level $LogLevel
+    Write-Host "Step 5/8: Run Br holidays cleaning validation" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.br_holidays_cleaning_validation `
+        --run-date $RunDate `
+        --log-level $LogLevel
 
-Write-Host "Step 6/6: Build dbt holiday-aware models" -ForegroundColor Yellow
-Push-Location ".\dbt_retail_analytics"
+    $ValidationReportPath = ".\reports\br_holidays_cleaning_validation\run_date=$RunDate\br_holidays_cleaning_validation_report.csv"
 
-if (-not (Test-Path $DbtExe)) {
-    throw "dbt executable not found at $DbtExe."
+    Write-Host "Step 6/8: Validation gate" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.check_report_gates `
+        --report-path $ValidationReportPath `
+        --log-level $LogLevel
+
+    Write-Host "Step 7/8: Load Br holidays into PostgreSQL" -ForegroundColor Yellow
+    & $PythonExe -m retail_analytics.cli.load_cleaned_to_postgres `
+        --br-holidays-run-date $RunDate `
+        --only br_holidays `
+        --log-level $LogLevel
+
+    Write-Host "Step 8/8: Build dbt holiday-aware models" -ForegroundColor Yellow
+
+    Push-Location ".\dbt_retail_analytics"
+    try {
+        if (-not (Test-Path $DbtExe)) {
+            throw "dbt executable not found at $DbtExe."
+        }
+
+        & $DbtExe build --select +fct_orders_holiday_context
+    }
+    finally {
+        Pop-Location
+    }
+
+    & $PythonExe -m retail_analytics.cli.pipeline_audit finish `
+        --pipeline-run-id $PipelineRunId `
+        --status SUCCESS
+
+    Write-Host "Br holidays local pipeline completed successfully." -ForegroundColor Green
+}
+catch {
+    $ErrorMessage = $_.Exception.Message
+
+    Write-Host "Br holidays local pipeline failed." -ForegroundColor Red
+    Write-Host $ErrorMessage -ForegroundColor Red
+
+    if ($PipelineRunId) {
+        & $PythonExe -m retail_analytics.cli.pipeline_audit finish `
+            --pipeline-run-id $PipelineRunId `
+            --status FAILED `
+            --error-message $ErrorMessage
+    }
+
+    throw
 }
 
-& $DbtExe build --select +fct_orders_holiday_context
 
-Pop-Location
-
-Write-Host "Brazil holidays local pipeline completed successfully." -ForegroundColor Green
-
-
-
-#  command to run the script is:
-# run_br_holidays_pipeline.ps1 -RunDate <run_date like 2026-06-16>
-
-# Expected flow:
-# 1. API extraction succeeds
-# 2. cleaning succeeds
-# 3. quality report is generated
-# 4. validation report is generated
-# 5. raw.br_holidays is loaded
-# 6. dbt holiday-aware models build
-
-# The dbt command uses:
-# dbt build --select +fct_orders_holiday_context
-
-
-# more tips:
-# If you see an execution policy error, run this once in the same terminal:
-# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-# then run:
-# .\scripts\run_br_holidays_pipeline.ps1 -RunDate <run_date like 2026-06-16>
+# to run this script:
+# .\scripts\run_br_holidays_pipeline.ps1 -RunDate <like 2026-06-16>
