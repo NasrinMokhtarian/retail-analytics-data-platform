@@ -2,7 +2,10 @@ import argparse
 import logging
 from dataclasses import asdict
 
-from retail_analytics.database.load_config import build_all_load_targets,validate_load_target_files_exist
+from retail_analytics.database.load_config import (
+    build_selected_load_targets,
+    validate_load_target_files_exist,
+)
 from retail_analytics.utils.logging import setup_logging
 from retail_analytics.validation.run_date import validate_run_date
 
@@ -17,15 +20,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--olist-run-date",
         type=str,
-        required=True,
+        required=False,
         help="Run date for cleaned Olist files in YYYY-MM-DD format.",
     )
 
     parser.add_argument(
         "--supplier-run-date",
         type=str,
-        required=True,
+        required=False,
         help="Run date for cleaned supplier file in YYYY-MM-DD format.",
+    )
+
+    parser.add_argument(
+        "--br-holidays-run-date",
+        type=str,
+        required=False,
+        help="Run date for cleaned Brazil holidays file in YYYY-MM-DD format.",
+    )
+
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        choices=["olist", "supplier", "br_holidays"],
+        default=["olist", "supplier", "br_holidays"],
+        help="Sources to validate. Example: --only br_holidays",
     )
 
     parser.add_argument(
@@ -38,24 +56,36 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
+
+def validate_optional_run_date(run_date: str | None) -> None:
+    if run_date is not None:
+        validate_run_date(run_date)
+
+
 def main() -> None:
     args = parse_args()
+
     setup_logging(args.log_level)
 
-    validate_run_date(args.olist_run_date)
-    validate_run_date(args.supplier_run_date)
+    validate_optional_run_date(args.olist_run_date)
+    validate_optional_run_date(args.supplier_run_date)
+    validate_optional_run_date(args.br_holidays_run_date)
 
     logger.info(
         "PostgreSQL load configuration validation started",
         extra={
+            "selected_sources": args.only,
             "olist_run_date": args.olist_run_date,
             "supplier_run_date": args.supplier_run_date,
+            "br_holidays_run_date": args.br_holidays_run_date,
         },
     )
 
-    load_targets = build_all_load_targets(
+    load_targets = build_selected_load_targets(
+        selected_sources=args.only,
         olist_run_date=args.olist_run_date,
         supplier_run_date=args.supplier_run_date,
+        br_holidays_run_date=args.br_holidays_run_date,
     )
 
     validate_load_target_files_exist(load_targets)

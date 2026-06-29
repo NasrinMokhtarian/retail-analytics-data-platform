@@ -9,10 +9,9 @@ from psycopg2 import sql
 from retail_analytics.database.connection import get_postgres_connection
 from retail_analytics.database.load_config import (
     PostgresLoadTarget,
-    build_all_load_targets,
+    build_selected_load_targets,
 )
 from retail_analytics.models.postgres_validation import PostgresLoadValidationResult
-
 
 logger = logging.getLogger(__name__)
 
@@ -60,17 +59,19 @@ def get_latest_audit_record(
     target_table: str,
 ) -> dict | None:
     query = """
-    SELECT
-        status,
-        loaded_row_count
-    FROM audit.load_audit
-    WHERE run_date = %s
-      AND source_name = %s
-      AND source_file = %s
-      AND target_schema = %s
-      AND target_table = %s
-    ORDER BY load_id DESC
-    LIMIT 1;
+        SELECT
+            status,
+            loaded_row_count
+        FROM audit.load_audit
+        WHERE run_date = %s
+        AND source_name = %s
+        AND source_file = %s
+        AND target_schema = %s
+        AND target_table = %s
+        ORDER BY
+            load_finished_at DESC NULLS LAST,
+            load_started_at DESC NULLS LAST
+        LIMIT 1;
     """
 
     with get_postgres_connection() as conn:
@@ -85,6 +86,7 @@ def get_latest_audit_record(
                     target_table,
                 ),
             )
+
             row = cursor.fetchone()
 
     if row is None:
@@ -150,7 +152,10 @@ def validate_single_load_target(
             latest_audit_status=None,
             latest_audit_loaded_row_count=None,
             status="FAIL",
-            message=f"Target table is missing: {load_target.target_schema}.{load_target.target_table}",
+            message=(
+                f"Target table is missing: "
+                f"{load_target.target_schema}.{load_target.target_table}"
+            ),
             validated_at=utc_now(),
         )
 
@@ -226,21 +231,27 @@ def validate_single_load_target(
 
 
 def validate_postgres_loads(
-    olist_run_date: str,
-    supplier_run_date: str,
     output_dir: Path,
     validation_run_date: str,
+    selected_sources: list[str],
+    olist_run_date: str | None = None,
+    supplier_run_date: str | None = None,
+    br_holidays_run_date: str | None = None,
 ) -> Path:
-    load_targets = build_all_load_targets(
+    load_targets = build_selected_load_targets(
+        selected_sources=selected_sources,
         olist_run_date=olist_run_date,
         supplier_run_date=supplier_run_date,
+        br_holidays_run_date=br_holidays_run_date,
     )
 
     logger.info(
         "PostgreSQL load validation started",
         extra={
+            "selected_sources": selected_sources,
             "olist_run_date": olist_run_date,
             "supplier_run_date": supplier_run_date,
+            "br_holidays_run_date": br_holidays_run_date,
             "validation_run_date": validation_run_date,
             "load_target_count": len(load_targets),
         },
@@ -269,11 +280,19 @@ def validate_postgres_loads(
         "latest_audit_status",
         "latest_audit_loaded_row_count",
         "status",
+        "severity",
         "message",
         "validated_at",
     ]
 
-    validation_df = pd.DataFrame(asdict(result) for result in validation_results)
+    validation_df = pd.DataFrame(
+        asdict(result) for result in validation_results
+    )
+
+    # Make this report compatible with check_report_gates.py.
+    # Any PostgreSQL load validation failure should stop the pipeline.
+    validation_df["severity"] = "error"
+
     validation_df = validation_df[output_columns]
     validation_df.to_csv(output_file, index=False)
 
