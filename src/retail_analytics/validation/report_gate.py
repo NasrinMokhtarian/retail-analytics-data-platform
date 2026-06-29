@@ -20,7 +20,7 @@ def normalize_text_value(value:object) -> str:
         return""
     return str(value).strip().lower()
 
-def chack_report_gate(report_path:Path) -> ReportGateResult:
+def check_report_gate(report_path:Path) -> ReportGateResult:
     if not report_path.exists():
         raise FileNotFoundError(f"Report file does not exist: {report_path}")
     report_df = pd.read_csv(report_path)
