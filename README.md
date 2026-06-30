@@ -433,6 +433,33 @@ install project dependencies
 This validates both Python pipeline logic and dbt project structure before continuing development.
 
 ---
+## Airflow Orchestration
+
+The project includes local Apache Airflow orchestration.
+
+Airflow is used to coordinate already-tested Python CLI commands, PostgreSQL validation steps, report gates, and dbt builds. It does not contain business transformation logic.
+
+Current DAGs:
+
+| DAG | Purpose |
+|---|---|
+| `retail_local_full_refresh` | Refreshes the full local analytics platform |
+| `br_holidays_api_refresh` | Refreshes the public holidays API enrichment source |
+
+The Airflow layer demonstrates:
+
+- task dependency management
+- local orchestration
+- visibility into task status and logs
+- pipeline-level audit integration
+- quality-gate orchestration
+- dbt build orchestration
+
+Detailed Airflow instructions are documented in:
+
+```text
+docs/airflow_orchestration_runbook.md
+```
 
 ## Current Technical Stack
 
@@ -450,6 +477,7 @@ This validates both Python pipeline logic and dbt project structure before conti
 | Audit                 | PostgreSQL audit tables                             |
 | Testing               | pytest                                              |
 | CI                    | GitHub Actions                                      |
+| Orchestration         | Airflow                                             |
 | Version control       | Git                                                 |
 | Documentation         | Markdown                                            |
 
@@ -472,10 +500,11 @@ The goal is to strengthen:
 * BI/dashboard communication
 * documentation habits
 * Git and CI workflow
+* Airflow Orchestration
 
 Cloud services are planned later, but the foundation is built locally first to avoid hiding weak data logic behind managed services.
 
----
+
 
 ## Current Status
 
@@ -498,10 +527,11 @@ Completed:
 * PostgreSQL recovery runbook
 * pytest test suite
 * GitHub Actions CI
+* Airflow orchestration for the local platform
 
 In progress / next:
 
-* Airflow orchestration for the local platform
+
 * orchestration documentation
 * AWS and Terraform design
 * controlled AWS implementation
@@ -510,20 +540,6 @@ In progress / next:
 
 ## Planned Next Phases
 
-### Phase 7 — Local Airflow Orchestration
-
-Airflow will be added after the local scripts are already stable.
-
-Initial Airflow scope:
-
-```text
-orchestrate existing working commands
-monitor task status
-show dependencies clearly
-avoid rewriting business logic inside DAGs
-```
-
-Airflow will not replace Python modules, dbt models, quality checks, or task runners. It will orchestrate them.
 
 ### Phase 8 — AWS and Terraform Design
 

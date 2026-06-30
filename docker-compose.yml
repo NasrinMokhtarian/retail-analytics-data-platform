@@ -11,6 +11,8 @@ services:
       - "${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}"
     volumes:
       - retail_analytics_postgres_data:/var/lib/postgresql/data
+    networks:
+      - retail_analytics_network
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: retail_analytics_pgadmin
@@ -28,7 +30,141 @@ services:
 
     depends_on:
       - postgres
+    networks:
+      - retail_analytics_network
+  
+  airflow-postgres:
+    image: postgres:16
+    container_name: retail_analytics_airflow-postgres
+    restart: unless-stopped
+    environment: 
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - retail_analytics_airflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    networks:
+      - retail_analytics_network
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: retail_analytics_airflow_init
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUROR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: Europe/Amsterdam
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__WEBSERVER__SECRET_KEY: local_airflow_secret_key
+      PYTHONPATH: /opt/airflow/project/src
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_CONTAINER_PORT}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - .:/opt/airflow/project
+    command: >
+      bash -c "
+      airflow db migrate &&
+      airflow users create
+      --username airflow
+      --password airflow
+      --firstname Local
+      --lastname Admin
+      --role Admin
+      --email airflow@example.com
+      "
+    networks:
+      - retail_analytics_network
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: retail_analytics_airflow_webserver
+    restart: unless-stopped
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: Europe/Amsterdam
+      AIRFLOW__WEBSERVER__SECRET_KEY: local_airflow_secret_key
+      PYTHONPATH: /opt/airflow/project/src
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_CONTAINER_PORT}
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - .:/opt/airflow/project
+    command: webserver
+    networks:
+      - retail_analytics_network
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: retail_analytics_airflow_scheduler
+    restart: unless-stopped
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: Europe/Amsterdam
+      AIRFLOW__WEBSERVER__SECRET_KEY: local_airflow_secret_key
+      PYTHONPATH: /opt/airflow/project/src
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_CONTAINER_PORT}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - .:/opt/airflow/project
+    command: scheduler
+    networks:
+      - retail_analytics_network
+
+
+
 
 volumes:
   retail_analytics_postgres_data:
   retail_analytics_pgadmin_data:
+  retail_analytics_airflow_postgres_data:
+
+networks:
+  retail_analytics_network:

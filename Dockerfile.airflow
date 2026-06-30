@@ -1,0 +1,20 @@
+FROM apache/airflow:2.11.1-python3.11
+
+USER airflow
+
+RUN pip install --no-cache-dir \
+pandas \            
+requests \
+sqlalchemy \
+psycopg2-binary \
+python-dotenv \
+dbt-postgres
+
+WORKDIR /opt/airflow/project
+
+# pandas              = your pipeline uses it
+# requests            = API extraction
+# sqlalchemy          = PostgreSQL loading
+# psycopg2-binary     = PostgreSQL driver
+# python-dotenv       = your connection.py imports dotenv
+# dbt-postgres        = dbt Core + PostgreSQL adapter

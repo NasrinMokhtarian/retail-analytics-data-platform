@@ -26,3 +26,5 @@ dbt_retail_analytics/dbt_packages/
 
 # Local processed outputs
 data/processed/
+# Airflow local runtime files
+airflow/logs/
