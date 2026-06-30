@@ -33,12 +33,12 @@ source onboarding
 → Power BI dashboard
 → local workflow automation
 → tests and CI
+→ Airflow orchestration
 ```
 
 Planned later:
 
 ```text
-Airflow orchestration
 → AWS extension
 → Terraform-managed infrastructure
 → S3 / Glue / Redshift
