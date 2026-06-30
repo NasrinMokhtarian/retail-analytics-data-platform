@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -21,7 +21,9 @@ POSTGRES_VALIDATION_REPORT_PATH = (
 )
 
 default_args = {
-    "retries": 0,
+    "retries": 1,
+    "retry_delay": timedelta(minutes=2),
+    "execution_timeout": timedelta(minutes=45),
 }
 
 with DAG(
@@ -35,6 +37,7 @@ with DAG(
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
+    dagrun_timeout=timedelta(hours=2),
     tags=["retail-analytics", "local", "full-refresh"],
     params={
         "olist_run_date": "2026-05-26",
