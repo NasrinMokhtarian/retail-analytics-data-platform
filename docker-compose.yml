@@ -60,7 +60,7 @@ services:
       airflow-postgres:
         condition: service_healthy
     environment:
-      AIRFLOW__CORE__EXECUROR: LocalExecutor
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
       AIRFLOW__CORE__DEFAULT_TIMEZONE: Europe/Amsterdam
