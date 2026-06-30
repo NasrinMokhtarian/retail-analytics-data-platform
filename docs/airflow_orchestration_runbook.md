@@ -29,6 +29,27 @@ Both DAGs are manually triggered for now.
 
 Scheduling can be added later after the local orchestration layer is stable.
 
+## Airflow Reliability Settings
+
+The Airflow DAGs include basic reliability settings to make local orchestration safer and easier to debug.
+
+Current settings:
+
+| DAG | Retries | Retry delay | Task timeout | DAG run timeout |
+|---|---:|---:|---:|---:|
+| `retail_local_full_refresh` | 1 | 2 minutes | 45 minutes | 2 hours |
+| `br_holidays_api_refresh` | 1 | 2 minutes | 20 minutes | 1 hour |
+
+These settings are intentionally conservative.
+
+Retries are limited to one attempt so that temporary Docker, PostgreSQL, or API issues have a second chance, but real data-quality or dbt failures are still visible.
+
+Execution timeouts prevent a task from hanging forever.
+
+DAG run timeouts prevent a full workflow from running indefinitely.
+
+The DAGs are still manually triggered. Scheduling will be added only after the local orchestration layer is stable and the refresh cadence is clear.
+
 ## Airflow Services
 
 Airflow runs locally through Docker Compose.
