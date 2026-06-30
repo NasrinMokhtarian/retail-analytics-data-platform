@@ -2,13 +2,13 @@
 
 A production-style local data engineering and analytics platform built around realistic retail and e-commerce workflows.
 
-This project demonstrates how raw business data can be onboarded, validated, cleaned, loaded into a local warehouse, transformed with dbt, monitored with audit tables and quality gates, tested with CI, and served to a Power BI dashboard.
+This project demonstrates how raw business data can be onboarded, validated, cleaned, loaded into PostgreSQL, transformed with dbt, orchestrated with Airflow, tested with CI, and served to a Power BI dashboard.
 
 ---
 
 ## Project Purpose
 
-This repository is built incrementally to simulate the kind of work performed in junior or bridge data roles such as:
+This repository is built incrementally to simulate the type of work performed in junior or bridge data roles such as:
 
 * Junior Data Engineer
 * Analytics Engineer
@@ -17,7 +17,7 @@ This repository is built incrementally to simulate the kind of work performed in
 * SQL Developer
 * Data Analyst with Python and SQL
 
-The project starts locally to strengthen the fundamentals before moving into orchestration and cloud infrastructure.
+The project starts locally to strengthen the fundamentals before moving into cloud infrastructure.
 
 Current focus:
 
@@ -32,17 +32,17 @@ source onboarding
 → dbt staging and marts
 → Power BI dashboard
 → local workflow automation
-→ tests and CI
 → Airflow orchestration
+→ testing and CI
 ```
 
 Planned later:
 
 ```text
-→ AWS extension
-→ Terraform-managed infrastructure
+AWS and Terraform design
 → S3 / Glue / Redshift
 → dbt on cloud warehouse
+→ controlled cloud implementation
 ```
 
 ---
@@ -72,30 +72,38 @@ The project is not only a technical pipeline. It is designed to connect engineer
 
 | Source                             | Type                              | Purpose                                                   | Status      |
 | ---------------------------------- | --------------------------------- | --------------------------------------------------------- | ----------- |
-|Retail E-Commerce  Dataset | CSV / transaction dataset | Main retail/e-commerce operational data                   | Implemented |
+| Retail E-Commerce Dataset | CSV / transactional-style dataset | Main retail/e-commerce operational data                   | Implemented |
 | Supplier product updates           | Handmade messy business file      | Simulates supplier/business data quality issues           | Implemented |
-| public holidays             | External API via Nager.Date       | Enriches  order data with public-holiday context | Implemented |
+| Public public holidays             | External API via Nager.Date       | Enriches order data with public-holiday context | Implemented |
 
 ---
 
 ## Current Architecture
 
-```text
-Tailor Commercial CSV files
-Supplier business file
-Holidays API
-        ↓
-Python ingestion / profiling / cleaning / quality / validation
-        ↓
-Cleaned local outputs
-        ↓
-PostgreSQL raw schema
-        ↓
-dbt staging models
-        ↓
-dbt mart models
-        ↓
-Power BI dashboard
+```mermaid
+flowchart TD
+    A[Olist CSV files] --> D[Python source onboarding]
+    B[Supplier business file] --> D
+    C[Public holidays API] --> D
+
+    D --> E[Raw landing, profiling, quality checks]
+    E --> F[Cleaning and validation]
+    F --> G[Cleaned local outputs]
+
+    G --> H[PostgreSQL raw schema]
+    H --> I[dbt staging models]
+    I --> J[dbt mart models]
+    J --> K[Power BI dashboard]
+
+    L[PowerShell task runners] --> D
+    M[Airflow orchestration] --> D
+    M --> H
+    M --> I
+    M --> J
+
+    N[pytest tests] --> O[GitHub Actions CI]
+    P[Report gates] --> M
+    Q[Audit tables] --> M
 ```
 
 ---
@@ -113,11 +121,17 @@ dbt_retail_analytics/
     marts/                     # dbt business-facing models
     exposures.yml              # Power BI dashboard exposure
   dbt_project.yml
+  profiles.yml                 # Local Airflow dbt profile
+
+airflow/
+  dags/                        # Airflow DAG definitions
+  plugins/                     # Optional Airflow plugins
+  logs/                        # Local Airflow logs, ignored by Git
 
 docs/                          # Project documentation and runbooks
 powerbi/                       # Power BI dashboard file
 reports/                       # Profiling, quality, validation, and load reports
-scripts/                       # Local task runners
+scripts/                       # Local PowerShell task runners
 sql/                           # SQL scripts and reference queries
 src/retail_analytics/          # Python package
 tests/                         # Lightweight pytest tests
@@ -137,6 +151,7 @@ Generated dbt artifacts such as `dbt_retail_analytics/target/` should not be com
 | `reports/`        | Inventory, profiling, quality, validation, and PostgreSQL load reports |
 | `docs/`           | Architecture notes, runbooks, source design, and project documentation |
 | `scripts/`        | Repeatable local task runners                                          |
+| `airflow/dags/`   | Airflow orchestration definitions                                      |
 
 ---
 
@@ -172,17 +187,17 @@ extract / land raw data
 
 This pattern has been applied to:
 
-* Retail e-commerce data
+* Olist e-commerce data
 * supplier product updates
-* Public holidays API data
+* Public public holidays API data
 
 ---
 
 ## Implemented Pipelines
 
-### Retail E-Commerce Data
+### Olist E-Commerce Data
 
-The retail dataset is used as the main e-commerce operational dataset.
+The Olist dataset is used as the main e-commerce operational dataset.
 
 It includes:
 
@@ -214,7 +229,7 @@ The supplier mart keeps problematic rows visible using quality flags and a `need
 
 ### Public Holidays API
 
-Public holidays are extracted from the Nager.Date API and used to enrich the e-commerce data.
+Public holidays are extracted from the Nager.Date API and used to enrich the retail e-commerce data.
 
 The holiday source supports analysis such as:
 
@@ -242,7 +257,7 @@ PostgreSQL raw tables
 → dbt exposure for Power BI
 ```
 
-Current important dbt models include:
+Important dbt models include:
 
 | Model                          | Purpose                                    |
 | ------------------------------ | ------------------------------------------ |
@@ -293,15 +308,15 @@ Dashboard pages:
 | Product & Seller Performance | Product category and seller performance analysis                                                       |
 | Delivery & Reviews           | Relationship between delivery performance and customer satisfaction                                    |
 | Supplier Data Quality        | Supplier rows requiring business review                                                                |
-| Holiday Impact               | Holiday-aware revenue, order, review, and delivery analysis using public-holiday API enrichment |
+| Holiday Impact               | Holiday-aware revenue, order, review, and delivery analysis using  public-holiday API enrichment |
 
-The Power BI dashboard is also documented as a dbt exposure.
+The Power BI dashboard is documented as a dbt exposure.
 
 ---
 
 ## Local Workflow Automation
 
-The project includes local task runners that make the platform repeatable before Airflow is introduced.
+The project includes local task runners that make the platform repeatable before and alongside Airflow orchestration.
 
 ### Full Local Platform Refresh
 
@@ -317,7 +332,7 @@ Purpose:
 create PostgreSQL schemas
 → create audit tables
 → validate cleaned-file mappings
-→ load retail raw tables
+→ load Olist raw tables
 → load supplier raw table
 → load public holidays raw table
 → validate PostgreSQL loads
@@ -365,6 +380,39 @@ Example command:
 
 ---
 
+## Airflow Orchestration
+
+The project includes local Apache Airflow orchestration through Docker Compose.
+
+Airflow is used to coordinate already-tested Python CLI commands, PostgreSQL validation steps, report gates, and dbt builds.
+
+Airflow does not contain business transformation logic.
+
+Current DAGs:
+
+| DAG                         | Purpose                                             |
+| --------------------------- | --------------------------------------------------- |
+| `retail_local_full_refresh` | Refreshes the full local analytics platform         |
+| `br_holidays_api_refresh`   | Refreshes the public holidays API enrichment source |
+
+The Airflow layer demonstrates:
+
+* task dependency management
+* local orchestration
+* visibility into task status and logs
+* pipeline-level audit integration
+* quality-gate orchestration
+* dbt build orchestration
+* retries and task timeouts
+
+Detailed Airflow instructions are documented in:
+
+```text
+docs/airflow_orchestration_runbook.md
+```
+
+---
+
 ## Audit and Quality Gates
 
 The project includes two audit levels.
@@ -378,9 +426,9 @@ Validation and gate layers include:
 
 | Layer                      | Purpose                                                           |
 | -------------------------- | ----------------------------------------------------------------- |
-| raw quality checks         | Check source-level quality before cleaning                        |
-| cleaned output validation  | Confirm cleaned outputs exist and preserve expected structure     |
-| report gates               | Stop the pipeline on error-level validation failures              |
+| Raw quality checks         | Check source-level quality before cleaning                        |
+| Cleaned output validation  | Confirm cleaned outputs exist and preserve expected structure     |
+| Report gates               | Stop the pipeline on error-level validation failures              |
 | PostgreSQL load validation | Compare cleaned files, raw tables, and audit records              |
 | dbt tests                  | Validate staging and mart assumptions                             |
 | CI tests                   | Check selected Python logic and dbt project parsing on every push |
@@ -418,7 +466,7 @@ The tests cover:
 * strict run-date validation
 * report-gate behavior
 * PostgreSQL load-target selection
-* Public holidays normalization logic
+* public holidays normalization logic
 
 GitHub Actions CI runs automatically on pushes and pull requests to `master`.
 
@@ -433,33 +481,6 @@ install project dependencies
 This validates both Python pipeline logic and dbt project structure before continuing development.
 
 ---
-## Airflow Orchestration
-
-The project includes local Apache Airflow orchestration.
-
-Airflow is used to coordinate already-tested Python CLI commands, PostgreSQL validation steps, report gates, and dbt builds. It does not contain business transformation logic.
-
-Current DAGs:
-
-| DAG | Purpose |
-|---|---|
-| `retail_local_full_refresh` | Refreshes the full local analytics platform |
-| `br_holidays_api_refresh` | Refreshes the public holidays API enrichment source |
-
-The Airflow layer demonstrates:
-
-- task dependency management
-- local orchestration
-- visibility into task status and logs
-- pipeline-level audit integration
-- quality-gate orchestration
-- dbt build orchestration
-
-Detailed Airflow instructions are documented in:
-
-```text
-docs/airflow_orchestration_runbook.md
-```
 
 ## Current Technical Stack
 
@@ -471,13 +492,13 @@ docs/airflow_orchestration_runbook.md
 | Database UI           | pgAdmin                                             |
 | Containerization      | Docker Compose                                      |
 | Transformation        | dbt Core                                            |
+| Orchestration         | Apache Airflow                                      |
 | Business intelligence | Power BI                                            |
 | Data quality          | Custom Python checks, validation reports, dbt tests |
 | Workflow automation   | PowerShell task runners                             |
 | Audit                 | PostgreSQL audit tables                             |
 | Testing               | pytest                                              |
 | CI                    | GitHub Actions                                      |
-| Orchestration         | Airflow                                             |
 | Version control       | Git                                                 |
 | Documentation         | Markdown                                            |
 
@@ -498,20 +519,20 @@ The goal is to strengthen:
 * relational modeling
 * dbt modeling
 * BI/dashboard communication
+* orchestration thinking
 * documentation habits
 * Git and CI workflow
-* Airflow Orchestration
 
 Cloud services are planned later, but the foundation is built locally first to avoid hiding weak data logic behind managed services.
 
-
+---
 
 ## Current Status
 
 Completed:
 
 * local source onboarding
-* retail dataset cleaning and validation
+* Olist cleaning and validation
 * supplier source simulation, cleaning, and validation
 * Public holidays API extraction, cleaning, and validation
 * PostgreSQL raw loading
@@ -527,19 +548,19 @@ Completed:
 * PostgreSQL recovery runbook
 * pytest test suite
 * GitHub Actions CI
-* Airflow orchestration for the local platform
+* local Airflow Docker setup
+* Airflow full-platform refresh DAG
+* Airflow public holidays API refresh DAG
 
-In progress / next:
+Next:
 
-
-* orchestration documentation
 * AWS and Terraform design
+* budget-control strategy
 * controlled AWS implementation
 
 ---
 
 ## Planned Next Phases
-
 
 ### Phase 8 — AWS and Terraform Design
 
@@ -570,13 +591,28 @@ local files / PostgreSQL exports
 
 Terraform will be used to manage infrastructure safely and support budget control.
 
+### Optional Later Phase — Azure/Databricks Alternative Design
+
+An Azure/Databricks version may be considered later as a separate architecture option.
+
+Possible Azure version:
+
+```text
+ADLS Gen2
+→ Azure Databricks / Delta Lake
+→ dbt or Databricks SQL
+→ Power BI
+```
+
+This is intentionally deferred to keep the current project focused.
+
 ---
 
 ## Portfolio Positioning
 
 This project is not presented as an enterprise production platform.
 
-It is a production-style local data engineering and analytics platform designed to enigineer realistic commercial workflows and pipelines.
+It is a production-style local data engineering and analytics platform designed to simulate realistic commercial workflows.
 
 It demonstrates:
 
@@ -590,6 +626,8 @@ It demonstrates:
 * dbt modeling
 * business mart design
 * Power BI reporting
+* local workflow automation
+* Airflow orchestration
 * documentation
 * testing
 * CI
@@ -602,4 +640,4 @@ The project is designed to support transition into junior or bridge data roles s
 * Junior Analytics Engineer
 * SQL Developer
 * Data Analyst with Python/SQL
-* Junior Data Engineer
+* Junior/ Mid-level Data Engineer
