@@ -32,25 +32,14 @@ jobs:
         run: |
           python -m pytest
 
-      - name: Create dbt profile for CI parse
-        run: |
-          mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml << 'EOF'
-          dbt_retail_analytics:
-            target: ci
-            outputs:
-              ci:
-                type: postgres
-                host: localhost
-                user: ci_user
-                password: ci_password
-                port: 5432
-                dbname: retail_analytics
-                schema: dbt
-                threads: 1
-          EOF
-
+      
       - name: Run dbt parse
         working-directory: dbt_retail_analytics
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: retail_analytics
         run: |
-          dbt parse
+          dbt parse --profiles-dir .
