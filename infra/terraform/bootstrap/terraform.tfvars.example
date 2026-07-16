@@ -1,0 +1,10 @@
+aws_region   = "eu-central-1"
+project_name = "retail-analytics-data-platform"
+owner        = "nasrin"
+environment  = "bootstrap"
+
+# Must be globally unique.
+# Do not include secrets.
+# Suggested pattern:
+# retail-analytics-tfstate-<your-unique-suffix>-eu-central-1
+state_bucket_name = "retail-analytics-tfstate-your-unique-suffix-eu-central-1"
