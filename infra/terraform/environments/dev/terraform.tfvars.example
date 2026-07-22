@@ -1,0 +1,11 @@
+aws_region   = "eu-central-1"
+project_name = "retail-analytics-data-platform"
+owner        = "nasrin"
+environment  = "dev"
+
+# Must be globally unique.
+# Suggested pattern:
+# retail-analytics-datalake-<your-unique-suffix>-eu-central-1
+data_lake_bucket_name = "retail-analytics-datalake-your-unique-suffix-eu-central-1"
+
+enable_data_lake_versioning = false
