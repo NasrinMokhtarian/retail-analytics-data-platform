@@ -1,25 +1,25 @@
 rule_id,source_file,column_name,rule_type,severity,status,failed_count,total_count,failure_percentage,message,checked_at
-BR_HOL_DQ_FILE_EXISTS_001,br_holidays_clean.csv,,file_exists,error,PASS,0,1,0.0,Br holidays cleaned file exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_NOT_EMPTY_001,br_holidays_clean.csv,,not_empty,error,PASS,0,1,0.0,Brholidays cleaned file is not empty. rows=42,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_DATE,br_holidays_clean.csv,holiday_date,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_NAME,br_holidays_clean.csv,holiday_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_LOCAL_NAME,br_holidays_clean.csv,holiday_local_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_COUNTRY_CODE,br_holidays_clean.csv,country_code,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_IS_FIXED,br_holidays_clean.csv,is_fixed,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_IS_GLOBAL,br_holidays_clean.csv,is_global,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_COUNTIES,br_holidays_clean.csv,counties,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_LAUNCH_YEAR,br_holidays_clean.csv,launch_year,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_TYPES,br_holidays_clean.csv,holiday_types,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_SOURCE_SYSTEM,br_holidays_clean.csv,source_system,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_SOURCE_FILE_NAME,br_holidays_clean.csv,source_file_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_EXTRACTED_AT,br_holidays_clean.csv,extracted_at,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_REQUIRED_COLUMN_RUN_DATE,br_holidays_clean.csv,run_date,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_DATE_NOT_NULL_001,br_holidays_clean.csv,holiday_date,not_null,error,PASS,0,42,0.0,holiday_date has no null or blank values.,2026-06-16T22:07:31.205346+00:00
-BR_HOL_DQ_DATE_PARSEABLE_001,br_holidays_clean.csv,holiday_date,parseable_date,error,PASS,0,42,0.0,holiday_date values are parseable as dates.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_COUNTRY_NOT_NULL_001,br_holidays_clean.csv,country_code,not_null,error,PASS,0,42,0.0,country_code has no null or blank values.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_COUNTRY_ACCEPTED_001,br_holidays_clean.csv,country_code,accepted_values,error,PASS,0,42,0.0,All country_code values are BR.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_NAME_NOT_NULL_001,br_holidays_clean.csv,holiday_name,not_null,warning,PASS,0,42,0.0,holiday_name has no null or blank values.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_EXTRACTED_AT_PARSEABLE_001,br_holidays_clean.csv,extracted_at,parseable_timestamp,warning,PASS,0,42,0.0,extracted_at values are parseable as timestamps.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_RUN_DATE_PARSEABLE_001,br_holidays_clean.csv,run_date,parseable_date,error,PASS,0,42,0.0,run_date values are parseable as dates.,2026-06-16T22:07:31.212550+00:00
-BR_HOL_DQ_EXPECTED_YEARS_001,br_holidays_clean.csv,holiday_date,expected_years,warning,PASS,0,3,0.0,"Holiday dates cover expected years: 2016, 2017, 2018.",2026-06-16T22:07:31.220162+00:00
-BR_HOL_DQ_DUPLICATE_DATE_NAME_001,br_holidays_clean.csv,"holiday_date,holiday_name",duplicate_business_key,warning,PASS,0,42,0.0,No duplicate holiday_date + holiday_name records found.,2026-06-16T22:07:31.222810+00:00
+BR_HOL_DQ_FILE_EXISTS_001,br_holidays_clean.csv,,file_exists,error,PASS,0,1,0.0,Br holidays cleaned file exists.,2026-06-30T23:01:52.765581+00:00
+BR_HOL_DQ_NOT_EMPTY_001,br_holidays_clean.csv,,not_empty,error,PASS,0,1,0.0,Brholidays cleaned file is not empty. rows=42,2026-06-30T23:01:52.772185+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_DATE,br_holidays_clean.csv,holiday_date,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772215+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_NAME,br_holidays_clean.csv,holiday_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772220+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_LOCAL_NAME,br_holidays_clean.csv,holiday_local_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772225+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_COUNTRY_CODE,br_holidays_clean.csv,country_code,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772229+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_IS_FIXED,br_holidays_clean.csv,is_fixed,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772234+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_IS_GLOBAL,br_holidays_clean.csv,is_global,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772240+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_COUNTIES,br_holidays_clean.csv,counties,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772245+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_LAUNCH_YEAR,br_holidays_clean.csv,launch_year,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772250+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_HOLIDAY_TYPES,br_holidays_clean.csv,holiday_types,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772255+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_SOURCE_SYSTEM,br_holidays_clean.csv,source_system,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772259+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_SOURCE_FILE_NAME,br_holidays_clean.csv,source_file_name,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772263+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_EXTRACTED_AT,br_holidays_clean.csv,extracted_at,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772267+00:00
+BR_HOL_DQ_REQUIRED_COLUMN_RUN_DATE,br_holidays_clean.csv,run_date,required_column_exists,error,PASS,0,1,0.0,Required column exists.,2026-06-30T23:01:52.772270+00:00
+BR_HOL_DQ_DATE_NOT_NULL_001,br_holidays_clean.csv,holiday_date,not_null,error,PASS,0,42,0.0,holiday_date has no null or blank values.,2026-06-30T23:01:52.773134+00:00
+BR_HOL_DQ_DATE_PARSEABLE_001,br_holidays_clean.csv,holiday_date,parseable_date,error,PASS,0,42,0.0,holiday_date values are parseable as dates.,2026-06-30T23:01:52.775533+00:00
+BR_HOL_DQ_COUNTRY_NOT_NULL_001,br_holidays_clean.csv,country_code,not_null,error,PASS,0,42,0.0,country_code has no null or blank values.,2026-06-30T23:01:52.776804+00:00
+BR_HOL_DQ_COUNTRY_ACCEPTED_001,br_holidays_clean.csv,country_code,accepted_values,error,PASS,0,42,0.0,All country_code values are BR.,2026-06-30T23:01:52.777430+00:00
+BR_HOL_DQ_NAME_NOT_NULL_001,br_holidays_clean.csv,holiday_name,not_null,warning,PASS,0,42,0.0,holiday_name has no null or blank values.,2026-06-30T23:01:52.777778+00:00
+BR_HOL_DQ_EXTRACTED_AT_PARSEABLE_001,br_holidays_clean.csv,extracted_at,parseable_timestamp,warning,PASS,0,42,0.0,extracted_at values are parseable as timestamps.,2026-06-30T23:01:52.779594+00:00
+BR_HOL_DQ_RUN_DATE_PARSEABLE_001,br_holidays_clean.csv,run_date,parseable_date,error,PASS,0,42,0.0,run_date values are parseable as dates.,2026-06-30T23:01:52.780416+00:00
+BR_HOL_DQ_EXPECTED_YEARS_001,br_holidays_clean.csv,holiday_date,expected_years,warning,PASS,0,3,0.0,"Holiday dates cover expected years: 2016, 2017, 2018.",2026-06-30T23:01:52.785399+00:00
+BR_HOL_DQ_DUPLICATE_DATE_NAME_001,br_holidays_clean.csv,"holiday_date,holiday_name",duplicate_business_key,warning,PASS,0,42,0.0,No duplicate holiday_date + holiday_name records found.,2026-06-30T23:01:52.788503+00:00

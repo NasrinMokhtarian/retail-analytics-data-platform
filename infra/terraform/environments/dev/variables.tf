@@ -32,3 +32,34 @@ variable "enable_data_lake_versioning" {
   type        = bool
   default     = false
 }
+
+variable "glue_database_name" {
+  description = "Glue Data Catalog database name for processed data."
+  type        = string
+  default     = "retail_analytics_processed_dev"
+}
+
+variable "athena_workgroup_name" {
+  description = "Athena workgroup name for the dev environment."
+  type        = string
+  default     = "retail_analytics_dev"
+}
+
+variable "athena_bytes_scanned_cutoff_per_query" {
+  description = "Optional maximum bytes scanned per Athena query."
+  type        = number
+  default     = 104857600
+}
+
+variable "processed_csv_table_definitions" {
+  description = "Processed CSV Glue/Athena table definitions."
+  type = map(object({
+    description = string
+    s3_prefix   = string
+    columns = list(object({
+      name = string
+      type = string
+    }))
+  }))
+  default = {}
+}

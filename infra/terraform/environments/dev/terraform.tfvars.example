@@ -9,3 +9,31 @@ environment  = "dev"
 data_lake_bucket_name = "retail-analytics-datalake-your-unique-suffix-eu-central-1"
 
 enable_data_lake_versioning = false
+
+aws_region   = "eu-central-1"
+project_name = "retail-analytics-data-platform"
+owner        = "nasrin"
+environment  = "dev"
+
+data_lake_bucket_name = "retail-analytics-datalake-your-unique-suffix-eu-central-1"
+
+enable_data_lake_versioning = false
+
+glue_database_name = "retail_analytics_processed_dev"
+
+athena_workgroup_name = "retail_analytics_dev"
+
+# 100 MB conservative cutoff for early testing.
+athena_bytes_scanned_cutoff_per_query = 104857600
+
+
+processed_csv_table_definitions = {
+  br_holidays = {
+    description = "Example processed CSV table."
+    s3_prefix   = "processed/athena_csv/br_holidays/run_date=2026-06-16/"
+    columns = [
+      { name = "date", type = "string" },
+      { name = "name", type = "string" }
+    ]
+  }
+}

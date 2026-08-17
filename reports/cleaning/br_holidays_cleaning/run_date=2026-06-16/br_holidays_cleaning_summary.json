@@ -1,9 +1,9 @@
 {
   "run_date": "2026-06-16",
-  "input_dir": "G:\\retail-analytics-data-platform\\data\\raw\\br_holidays\\run_date=2026-06-16",
-  "output_file": "G:\\retail-analytics-data-platform\\data\\processed\\br_holidays_clean\\run_date=2026-06-16\\br_holidays_clean.csv",
-  "report_file": "G:\\retail-analytics-data-platform\\reports\\cleaning\\br_holidays_cleaning\\run_date=2026-06-16\\br_holidays_cleaning_summary.json",
+  "input_dir": "/opt/airflow/project/data/raw/br_holidays/run_date=2026-06-16",
+  "output_file": "/opt/airflow/project/data/processed/br_holidays_clean/run_date=2026-06-16/br_holidays_clean.csv",
+  "report_file": "/opt/airflow/project/reports/cleaning/br_holidays_cleaning/run_date=2026-06-16/br_holidays_cleaning_summary.json",
   "input_file_count": 3,
   "output_row_count": 42,
-  "cleaned_at": "2026-06-16T22:06:55.185420+00:00"
+  "cleaned_at": "2026-06-30T23:01:51.145332+00:00"
 }

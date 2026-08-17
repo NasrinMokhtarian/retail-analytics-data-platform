@@ -1,0 +1,187 @@
+﻿processed_csv_table_definitions = {
+  br_holidays = {
+    description = "Athena external table for br_holidays processed CSV data."
+    s3_prefix   = "processed/athena_csv/br_holidays/run_date=2026-06-16/"
+    columns = [
+      { name = "holiday_date", type = "string" },
+      { name = "holiday_name", type = "string" },
+      { name = "holiday_local_name", type = "string" },
+      { name = "country_code", type = "string" },
+      { name = "is_fixed", type = "string" },
+      { name = "is_global", type = "string" },
+      { name = "counties", type = "string" },
+      { name = "launch_year", type = "string" },
+      { name = "holiday_types", type = "string" },
+      { name = "source_system", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "extracted_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_customers = {
+    description = "Athena external table for olist_customers processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_customers/run_date=2026-05-26/"
+    columns = [
+      { name = "customer_id", type = "string" },
+      { name = "customer_unique_id", type = "string" },
+      { name = "customer_zip_code_prefix", type = "string" },
+      { name = "customer_city", type = "string" },
+      { name = "customer_state", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_geolocation = {
+    description = "Athena external table for olist_geolocation processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_geolocation/run_date=2026-05-26/"
+    columns = [
+      { name = "geolocation_zip_code_prefix", type = "string" },
+      { name = "geolocation_lat", type = "string" },
+      { name = "geolocation_lng", type = "string" },
+      { name = "geolocation_city", type = "string" },
+      { name = "geolocation_state", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_order_items = {
+    description = "Athena external table for olist_order_items processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_order_items/run_date=2026-05-26/"
+    columns = [
+      { name = "order_id", type = "string" },
+      { name = "order_item_id", type = "string" },
+      { name = "product_id", type = "string" },
+      { name = "seller_id", type = "string" },
+      { name = "shipping_limit_date", type = "string" },
+      { name = "price", type = "string" },
+      { name = "freight_value", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_order_payments = {
+    description = "Athena external table for olist_order_payments processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_order_payments/run_date=2026-05-26/"
+    columns = [
+      { name = "order_id", type = "string" },
+      { name = "payment_sequential", type = "string" },
+      { name = "payment_type", type = "string" },
+      { name = "payment_installments", type = "string" },
+      { name = "payment_value", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_order_reviews = {
+    description = "Athena external table for olist_order_reviews processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_order_reviews/run_date=2026-05-26/"
+    columns = [
+      { name = "review_id", type = "string" },
+      { name = "order_id", type = "string" },
+      { name = "review_score", type = "string" },
+      { name = "review_comment_title", type = "string" },
+      { name = "review_comment_message", type = "string" },
+      { name = "review_creation_date", type = "string" },
+      { name = "review_answer_timestamp", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_orders = {
+    description = "Athena external table for olist_orders processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_orders/run_date=2026-05-26/"
+    columns = [
+      { name = "order_id", type = "string" },
+      { name = "customer_id", type = "string" },
+      { name = "order_status", type = "string" },
+      { name = "order_purchase_timestamp", type = "string" },
+      { name = "order_approved_at", type = "string" },
+      { name = "order_delivered_carrier_date", type = "string" },
+      { name = "order_delivered_customer_date", type = "string" },
+      { name = "order_estimated_delivery_date", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_product_category_translation = {
+    description = "Athena external table for olist_product_category_translation processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_product_category_translation/run_date=2026-05-26/"
+    columns = [
+      { name = "product_category_name", type = "string" },
+      { name = "product_category_name_english", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_products = {
+    description = "Athena external table for olist_products processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_products/run_date=2026-05-26/"
+    columns = [
+      { name = "product_id", type = "string" },
+      { name = "product_category_name", type = "string" },
+      { name = "product_name_lenght", type = "string" },
+      { name = "product_description_lenght", type = "string" },
+      { name = "product_photos_qty", type = "string" },
+      { name = "product_weight_g", type = "string" },
+      { name = "product_length_cm", type = "string" },
+      { name = "product_height_cm", type = "string" },
+      { name = "product_width_cm", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  olist_sellers = {
+    description = "Athena external table for olist_sellers processed CSV data."
+    s3_prefix   = "processed/athena_csv/olist_sellers/run_date=2026-05-26/"
+    columns = [
+      { name = "seller_id", type = "string" },
+      { name = "seller_zip_code_prefix", type = "string" },
+      { name = "seller_city", type = "string" },
+      { name = "seller_state", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+  supplier_product_updates = {
+    description = "Athena external table for supplier_product_updates processed CSV data."
+    s3_prefix   = "processed/athena_csv/supplier_product_updates/run_date=2026-06-01/"
+    columns = [
+      { name = "supplier_id", type = "string" },
+      { name = "supplier_name", type = "string" },
+      { name = "product_id", type = "string" },
+      { name = "supplier_product_code", type = "string" },
+      { name = "updated_price", type = "string" },
+      { name = "currency", type = "string" },
+      { name = "stock_status", type = "string" },
+      { name = "valid_from", type = "string" },
+      { name = "last_updated_at", type = "string" },
+      { name = "comments", type = "string" },
+      { name = "currency_clean", type = "string" },
+      { name = "stock_status_clean", type = "string" },
+      { name = "updated_price_clean", type = "string" },
+      { name = "valid_from_clean", type = "string" },
+      { name = "last_updated_at_clean", type = "string" },
+      { name = "has_missing_product_id", type = "string" },
+      { name = "has_missing_currency", type = "string" },
+      { name = "has_invalid_price", type = "string" },
+      { name = "has_negative_price", type = "string" },
+      { name = "has_unknown_stock_status", type = "string" },
+      { name = "has_missing_valid_from", type = "string" },
+      { name = "has_invalid_valid_from", type = "string" },
+      { name = "has_invalid_last_updated_at", type = "string" },
+      { name = "is_duplicate_business_key", type = "string" },
+      { name = "source_file_name", type = "string" },
+      { name = "ingested_at", type = "string" },
+      { name = "run_date", type = "string" },
+    ]
+  }
+}
