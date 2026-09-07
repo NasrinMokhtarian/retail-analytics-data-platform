@@ -63,3 +63,58 @@ variable "processed_csv_table_definitions" {
   }))
   default = {}
 }
+
+variable "processed_parquet_table_definitions" {
+  description = "Processed Parquet Glue/Athena table definitions."
+  type = map(object({
+    description = string
+    s3_prefix   = string
+    columns = list(object({
+      name = string
+      type = string
+    }))
+  }))
+  default = {}
+}
+
+variable "enable_redshift" {
+  description = "Whether to create Redshift Serverless resources."
+  type        = bool
+  default     = false
+}
+
+variable "redshift_base_capacity" {
+  description = "Redshift Serverless base capacity in RPUs."
+  type        = number
+  default     = 4
+}
+
+variable "redshift_max_capacity" {
+  description = "Redshift Serverless max capacity in RPUs."
+  type        = number
+  default     = 4
+}
+
+variable "redshift_usage_limit_amount" {
+  description = "Daily Redshift Serverless usage limit in RPU-hours."
+  type        = number
+  default     = 1
+}
+
+variable "redshift_publicly_accessible" {
+  description = "Whether Redshift Serverless should be publicly accessible."
+  type        = bool
+  default     = false
+}
+
+variable "redshift_allowed_cidr_blocks" {
+  description = "Approved CIDR blocks allowed to connect to Redshift."
+  type        = list(string)
+  default     = []
+}
+
+variable "redshift_subnet_ids" {
+  description = "Optional subnet IDs for Redshift Serverless."
+  type        = list(string)
+  default     = []
+}

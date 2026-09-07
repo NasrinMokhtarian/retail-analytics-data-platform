@@ -1,0 +1,1 @@
+select geolocation_zip_code_prefix,avg(geolocation_lat)::decimal(10,6) latitude,avg(geolocation_lng)::decimal(10,6) longitude,min(geolocation_city) city,min(geolocation_state) state from {{ ref('stg_geolocation') }} where geolocation_zip_code_prefix is not null group by 1

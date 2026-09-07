@@ -23,6 +23,9 @@ Logs/
 dbt_retail_analytics/target/
 dbt_retail_analytics/logs/
 dbt_retail_analytics/dbt_packages/
+# dbt local credentials
+dbt_retail_analytics/profiles.yml
+dbt/profiles.yml
 
 # Local processed outputs
 data/processed/
@@ -44,3 +47,20 @@ override.tf.json
 *_override.tf.json
 .terraform.lock.hcl
 terraform.tfstate.backup
+Dockerfile.spark
+# Local-only Redshift enablement values
+infra/terraform/environments/dev/redshift_enablement.local.tfvars
+
+# Current Redshift dbt project artifacts / local credentials
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/profiles.yml
+
+# Terraform local plans
+*.tfplan
+tfplan
+tfplan.json
+
+# Keep Terraform lock files committed for reproducibility:
+# remove the existing `.terraform.lock.hcl` ignore rule from .gitignore

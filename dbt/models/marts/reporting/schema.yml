@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: mart_supplier_product_health
+    description: "Supplier-product health mart. Sales metrics are product-level demand context and are not presented as supplier-attributed sales."
+    columns:
+      - name: supplier_id
+        tests:
+          - not_null
+      - name: product_id
+        description: "May be null when the supplier source contains a missing product identifier; retained intentionally for data-quality monitoring."
+
+  - name: mart_customer_behavior
+    columns:
+      - name: customer_unique_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_sales_performance
+    columns:
+      - name: month_start
+        description: "May be null when the supplier source contains a missing product identifier; retained intentionally for data-quality monitoring."

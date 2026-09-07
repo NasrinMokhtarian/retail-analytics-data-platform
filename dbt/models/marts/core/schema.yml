@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Calendar dimension enriched with Brazilian public holiday information."
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_customers
+    description: "Customer dimension at unique-customer grain with geographic enrichment."
+    columns:
+      - name: customer_unique_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_products
+    description: "Product dimension enriched with English product category names."
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_sellers
+    description: "Seller dimension with geographic enrichment."
+    columns:
+      - name: seller_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_suppliers
+    description: "Supplier dimension sourced from supplier product updates."
+    columns:
+      - name: supplier_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_orders
+    description: "Order-level fact table containing payment, review, delivery, customer, and holiday metrics."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_order_items
+    description: "Order-item fact table enriched with product, seller, and supplier information."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: order_item_id
+        tests:
+          - not_null
+
+  - name: fct_payments
+    description: "Payment-event fact table."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+
+  - name: fct_reviews
+    description: "Review-level fact table."
+    columns:
+      - name: review_id
+        tests:
+          - not_null

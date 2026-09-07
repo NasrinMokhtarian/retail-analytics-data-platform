@@ -1,0 +1,17 @@
+version: 2
+sources:
+  - name: spectrum_processed
+    database: retail_analytics
+    schema: spectrum_processed
+    tables:
+      - name: olist_orders_parquet
+      - name: olist_order_items_parquet
+      - name: olist_order_payments_parquet
+      - name: olist_order_reviews_parquet
+      - name: olist_customers_parquet
+      - name: olist_products_parquet
+      - name: olist_product_category_translation_parquet
+      - name: olist_sellers_parquet
+      - name: olist_geolocation_parquet
+      - name: supplier_product_updates_parquet
+      - name: br_holidays_parquet

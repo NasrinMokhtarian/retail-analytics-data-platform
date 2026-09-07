@@ -1,0 +1,1 @@
+with r as (select *,row_number() over(partition by order_id order by payment_value desc nulls last,payment_sequential) rn from {{ ref('stg_order_payments') }}) select order_id,sum(coalesce(payment_value,0))::decimal(18,2) payment_total,count(*) payment_count,max(payment_installments) max_installments,max(case when rn=1 then payment_type end) primary_payment_type from r group by 1

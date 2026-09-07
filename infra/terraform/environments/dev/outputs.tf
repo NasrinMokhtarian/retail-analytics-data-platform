@@ -52,3 +52,34 @@ output "processed_csv_glue_table_names" {
   description = "Glue table names for processed CSV sources."
   value       = module.processed_csv_glue_tables.table_names
 }
+
+output "processed_parquet_glue_table_names" {
+  description = "Glue table names for processed Parquet sources."
+  value       = module.processed_parquet_glue_tables.table_names
+}
+
+output "redshift_serverless_namespace_name" {
+  description = "Redshift Serverless namespace name."
+  value       = module.redshift_serverless.namespace_name
+}
+
+output "redshift_serverless_workgroup_name" {
+  description = "Redshift Serverless workgroup name."
+  value       = module.redshift_serverless.workgroup_name
+}
+
+output "redshift_serverless_workgroup_arn" {
+  description = "Redshift Serverless workgroup ARN."
+  value       = module.redshift_serverless.workgroup_arn
+}
+
+output "redshift_serverless_admin_password_secret_arn" {
+  description = "AWS-managed Redshift admin password secret ARN."
+  value       = module.redshift_serverless.admin_password_secret_arn
+  sensitive   = true
+}
+
+output "redshift_serverless_s3_access_role_arn" {
+  description = "IAM role ARN used by Redshift to read the S3 Parquet layer."
+  value       = module.redshift_serverless.s3_access_role_arn
+}

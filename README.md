@@ -551,45 +551,41 @@ Completed:
 * local Airflow Docker setup
 * Airflow full-platform refresh DAG
 * Airflow public holidays API refresh DAG
-
-Next:
-
 * AWS and Terraform design
 * budget-control strategy
 * controlled AWS implementation
+* The cloud warehouse is now fully execution-validated through the reporting layer.
 
----
+  Verified:
+  - Python data-quality framework
+  - raw data-quality gate: **81 PASS / 0 FAIL**
+  - cleaning validation gate: **72 PASS / 0 FAIL**
+  - S3 / Glue / Spectrum access
+  - Redshift Data API connectivity
+  - **34 dbt models**
+  - **39 dbt data tests**
+  - **11 dbt sources**
+  - staging execution
+  - intermediate execution
+  - core warehouse execution
+  - all 6 reporting marts
+  - final dbt tests across the marts layer
+  - Redshift Serverless cost controls
+
+  Validated reporting marts:
+  - `mart_sales_performance`
+  - `mart_customer_behavior`
+  - `mart_delivery_operations`
+  - `mart_product_performance`
+  - `mart_supplier_product_health`
+  - `mart_data_quality`
+
 
 ## Planned Next Phases
 
-### Phase 8 — AWS and Terraform Design
+- Power BI final report refresh using the validated reporting marts
 
-Before creating cloud resources, the project will define:
-
-* AWS region
-* budget-control strategy
-* persistent vs temporary resources
-* S3 layout
-* IAM approach
-* Redshift Serverless approach
-* Glue/Athena usage
-* Terraform state strategy
-* daily destroy strategy for expensive resources
-
-### Phase 9 — AWS Implementation
-
-Planned AWS extension:
-
-```text
-local files / PostgreSQL exports
-→ S3 raw and processed zones
-→ Glue or PySpark transformations
-→ Athena or Redshift
-→ dbt on Redshift
-→ Power BI
-```
-
-Terraform will be used to manage infrastructure safely and support budget control.
+For portfolio use, Power BI Import mode is preferred over DirectQuery so report interaction does not repeatedly wake Redshift Serverless.
 
 ### Optional Later Phase — Azure/Databricks Alternative Design
 

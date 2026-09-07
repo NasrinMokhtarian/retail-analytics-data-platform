@@ -37,3 +37,31 @@ processed_csv_table_definitions = {
     ]
   }
 }
+
+processed_parquet_table_definitions = {
+  br_holidays_parquet = {
+    description = "Example processed Parquet table."
+    s3_prefix   = "processed/athena_parquet/br_holidays/run_date=2026-06-16/"
+    columns = [
+      { name = "date", type = "string" },
+      { name = "name", type = "string" }
+    ]
+  }
+}
+
+# Redshift Serverless is a RED-cost phase.
+# Keep disabled unless you intentionally want to create it.
+enable_redshift = false
+
+redshift_base_capacity       = 4
+redshift_max_capacity        = 4
+redshift_usage_limit_amount  = 1
+redshift_publicly_accessible = false
+
+# Later, for Power BI from your laptop, use only your own IP as /32.
+# Example:
+# redshift_allowed_cidr_blocks = ["203.0.113.10/32"]
+redshift_allowed_cidr_blocks = []
+
+# Optional. Leave empty to use default VPC subnets when Redshift is enabled.
+redshift_subnet_ids = []

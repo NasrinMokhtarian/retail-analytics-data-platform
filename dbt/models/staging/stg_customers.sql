@@ -1,0 +1,2 @@
+with source as (select * from {{ source('spectrum_processed','olist_customers_parquet') }})
+select nullif(trim(customer_id),'') customer_id,nullif(trim(customer_unique_id),'') customer_unique_id,nullif(trim(customer_zip_code_prefix),'') customer_zip_code_prefix,lower(nullif(trim(customer_city),'')) customer_city,upper(nullif(trim(customer_state),'')) customer_state,nullif(trim(source_file_name),'') source_file_name,try_cast(nullif(trim(ingested_at),'') as timestamp) ingested_at,try_cast(nullif(trim(run_date),'') as date) run_date from source

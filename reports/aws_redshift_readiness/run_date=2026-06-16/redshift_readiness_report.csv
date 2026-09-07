@@ -1,0 +1,27 @@
+﻿"readiness_run_date","aws_profile","aws_region","check_name","category","status","details"
+"2026-06-16","retail-analytics-dev","eu-central-1","AWS caller identity","identity","PASS","{
+    ""UserId"": ""AIDA5F5H5VEUWFNXMIWL5"",
+    ""Account"": ""906053396777"",
+    ""Arn"": ""arn:aws:iam::906053396777:user/terraform-retail-analytics-dev""
+}"
+"2026-06-16","retail-analytics-dev","eu-central-1","Redshift Serverless list namespaces","redshift-serverless-read","PASS","{
+    ""namespaces"": []
+}"
+"2026-06-16","retail-analytics-dev","eu-central-1","Redshift Serverless list workgroups","redshift-serverless-read","PASS","{
+    ""workgroups"": []
+}"
+"2026-06-16","retail-analytics-dev","eu-central-1","Default VPC lookup","network-read","PASS","[
+    ""vpc-0be5344271b408030""
+]"
+"2026-06-16","retail-analytics-dev","eu-central-1","Subnet lookup","network-read","PASS","[
+    ""subnet-0bd154f1416d8d100"",
+    ""subnet-04c30a74e14e515a8"",
+    ""subnet-0351df137599d6165""
+]"
+"2026-06-16","retail-analytics-dev","eu-central-1","Security group lookup","network-read","PASS","[
+    ""sg-05fecf7c672b8e6b3""
+]"
+"2026-06-16","retail-analytics-dev","eu-central-1","Secrets Manager read readiness","secrets-read","PASS","{
+    ""SecretList"": []
+}"
+"2026-06-16","retail-analytics-dev","eu-central-1","IAM role read readiness","iam-read","FAIL",""

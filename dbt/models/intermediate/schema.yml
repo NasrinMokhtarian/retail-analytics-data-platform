@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: int_product_sales
+    description: "Product-level commercial rollup used to enrich supplier-product reporting without changing order-item grain."
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+  - name: int_order_items_enriched
+    description: "Order-item enrichment that deliberately excludes supplier joins to preserve one-row-per-order-item grain."
+
+  - name: int_reviews_by_order
+    description: "One-row-per-order review summary using Redshift-safe boolean aggregation."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique

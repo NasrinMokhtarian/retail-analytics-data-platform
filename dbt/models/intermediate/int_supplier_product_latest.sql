@@ -1,0 +1,1 @@
+with r as (select *,row_number() over(partition by supplier_id,product_id order by last_updated_at desc nulls last,valid_from desc nulls last,ingested_at desc nulls last) rn from {{ ref('stg_supplier_product_updates') }}) select * from r where rn=1

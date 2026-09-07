@@ -1,0 +1,34 @@
+version: 2
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+  - name: stg_sellers
+    columns:
+      - name: seller_id
+        tests: [not_null, unique]
+  - name: stg_order_reviews
+    columns:
+      - name: review_score
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5]
+  - name: stg_holidays
+    columns:
+      - name: holiday_date
+        tests: [not_null]
+      - name: country_code
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['BR']

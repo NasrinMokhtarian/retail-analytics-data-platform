@@ -14,6 +14,15 @@ locals {
       columns     = table_definition.columns
     }
   }
+
+  processed_parquet_tables = {
+    for table_name, table_definition in var.processed_parquet_table_definitions :
+    table_name => {
+      description = table_definition.description
+      s3_location = "s3://${module.s3_data_lake.bucket_name}/${table_definition.s3_prefix}"
+      columns     = table_definition.columns
+    }
+  }
 }
 
 provider "aws" {
@@ -51,4 +60,33 @@ module "processed_csv_glue_tables" {
 
   database_name = module.glue_catalog.database_name
   tables        = local.processed_csv_tables
+}
+module "processed_parquet_glue_tables" {
+  source = "../../modules/glue_parquet_tables"
+
+  database_name = module.glue_catalog.database_name
+  tables        = local.processed_parquet_tables
+}
+
+module "redshift_serverless" {
+  source = "../../modules/redshift_serverless"
+
+  enable_redshift = var.enable_redshift
+
+  namespace_name = "retail-analytics-dev"
+  workgroup_name = "retail-analytics-dev-workgroup"
+  database_name  = "retail_analytics"
+  admin_username = "retail_admin"
+
+  s3_bucket_name = module.s3_data_lake.bucket_name
+
+  base_capacity      = var.redshift_base_capacity
+  max_capacity       = var.redshift_max_capacity
+  usage_limit_amount = var.redshift_usage_limit_amount
+
+  publicly_accessible = var.redshift_publicly_accessible
+  allowed_cidr_blocks = var.redshift_allowed_cidr_blocks
+  subnet_ids          = var.redshift_subnet_ids
+
+  tags = local.common_tags
 }

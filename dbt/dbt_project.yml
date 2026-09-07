@@ -1,0 +1,23 @@
+name: 'retail_analytics'
+version: '1.0.0'
+config-version: 2
+profile: 'retail_analytics'
+model-paths: ["models"]
+test-paths: ["tests"]
+models:
+  retail_analytics:
+    staging:
+      +materialized: view
+      +bind: false
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +bind: false
+      +schema: intermediate
+    marts:
+      core:
+        +materialized: table
+        +schema: marts_core
+      reporting:
+        +materialized: table
+        +schema: marts_reporting
