@@ -1,639 +1,438 @@
 # Retail Analytics Data Platform
 
-A production-style local data engineering and analytics platform built around realistic retail and e-commerce workflows.
+A production-style, end-to-end data engineering and analytics portfolio project built around realistic retail and e-commerce workflows.
 
-This project demonstrates how raw business data can be onboarded, validated, cleaned, loaded into PostgreSQL, transformed with dbt, orchestrated with Airflow, tested with CI, and served to a Power BI dashboard.
+The platform demonstrates the full path from source onboarding and data-quality validation to cloud storage, warehouse modeling, orchestration, infrastructure as code, CI, and business reporting in Power BI.
+
+## Project Highlights
+
+- **3 source families:** Olist e-commerce data, supplier product updates, and Brazilian public-holiday API data
+- **11 curated dbt sources**
+- **34 dbt models**
+- **39 dbt data tests**
+- **6 validated reporting marts**
+- **81 / 0 raw quality checks passed / failed**
+- **72 / 0 cleaning validation checks passed / failed**
+- **AWS S3 + Glue + Redshift Spectrum + Redshift Serverless**
+- **Terraform-managed cloud infrastructure**
+- **Apache Airflow orchestration for the local workflow**
+- **GitHub Actions CI**
+- **6-page Power BI report built on the validated reporting marts**
+- **Cost-aware Redshift Serverless development with RPU limits and usage controls**
 
 ---
 
-## Project Purpose
+## Final Architecture
 
-This repository is built incrementally to simulate the type of work performed in junior or bridge data roles such as:
+```mermaid
+flowchart LR
+    A[Olist CSV Sources] --> B[Python Ingestion / Profiling / Quality / Cleaning]
+    S[Supplier Updates] --> B
+    H[Brazilian Holidays API] --> B
 
-* Junior Data Engineer
-* Analytics Engineer
-* BI Developer
-* ETL Developer
-* SQL Developer
-* Data Analyst with Python and SQL
+    B --> C[Validated Parquet]
+    C --> D[Amazon S3]
+    D --> E[AWS Glue Data Catalog]
+    E --> F[Redshift Spectrum External Schema]
 
-The project starts locally to strengthen the fundamentals before moving into cloud infrastructure.
+    F --> G[dbt Staging<br/>Late-Binding Views]
+    G --> I[dbt Intermediate<br/>Late-Binding Views]
+    I --> J[Core Warehouse<br/>Dimensions + Facts]
+    J --> K[Reporting Marts]
+    K --> L[Power BI<br/>Import Mode]
 
-Current focus:
-
-```text
-source onboarding
-→ data profiling
-→ data quality checks
-→ cleaning
-→ cleaned output validation
-→ PostgreSQL raw loading
-→ load audit
-→ dbt staging and marts
-→ Power BI dashboard
-→ local workflow automation
-→ Airflow orchestration
-→ testing and CI
+    T[Terraform] -. provisions .-> D
+    T -. provisions .-> F
+    Q[pytest + Validation Gates] -. validates .-> B
+    AF[Apache Airflow] -. local orchestration .-> B
+    CI[GitHub Actions] -. pytest + dbt parse .-> B
 ```
 
-Planned later:
+### Cloud serving path
 
 ```text
-AWS and Terraform design
-→ S3 / Glue / Redshift
-→ dbt on cloud warehouse
-→ controlled cloud implementation
+Validated Parquet
+→ Amazon S3
+→ AWS Glue Data Catalog
+→ Redshift Spectrum
+→ dbt staging
+→ dbt intermediate
+→ core dimensions and facts
+→ reporting marts
+→ Power BI
 ```
+
+The earlier PostgreSQL implementation remains in the repository as a local development/orchestration phase. The current portfolio warehouse is the Redshift-based `dbt/` project.
 
 ---
 
 ## Business Context
 
-The platform supports analysis for a retail/e-commerce business.
+The platform supports analysis for a retail / e-commerce business and answers questions around:
 
-The business wants to understand:
+- revenue and sales trends
+- order and item volume
+- customer value and repeat behavior
+- product-category performance
+- seller geography
+- delivery speed and late-delivery risk
+- supplier price and stock health
+- supplier-source data quality
+- public-holiday impact on delivery operations
+- pipeline validation and data-quality health
 
-* order volume
-* revenue trends
-* customer geography
-* product category performance
-* seller performance
-* delivery performance
-* payment behavior
-* customer reviews
-* supplier data quality
-* public-holiday impact on orders, delivery, revenue, and reviews
-
-The project is not only a technical pipeline. It is designed to connect engineering work to business questions.
+The project is designed to connect engineering decisions to business outcomes rather than treating ETL, modeling, and BI as separate exercises.
 
 ---
 
 ## Data Sources
 
-| Source                             | Type                              | Purpose                                                   | Status      |
-| ---------------------------------- | --------------------------------- | --------------------------------------------------------- | ----------- |
-| Retail E-Commerce Dataset | CSV / transactional-style dataset | Main retail/e-commerce operational data                   | Implemented |
-| Supplier product updates           | Handmade messy business file      | Simulates supplier/business data quality issues           | Implemented |
-| Public public holidays             | External API via Nager.Date       | Enriches order data with public-holiday context | Implemented |
+### 1. Olist Brazilian E-Commerce
+
+The main transactional dataset includes:
+
+- customers
+- geolocation
+- orders
+- order items
+- order payments
+- order reviews
+- products
+- product-category translation
+- sellers
+
+### 2. Supplier Product Updates
+
+A deliberately messy business feed used to demonstrate realistic data-quality handling, including:
+
+- missing product IDs
+- missing currency values
+- invalid and negative prices
+- unknown stock statuses
+- invalid dates / timestamps
+- duplicate business keys
+
+Quality exceptions are retained and flagged rather than silently removed.
+
+### 3. Brazilian Public Holidays
+
+Public-holiday data is extracted from the Nager.Date API and used to enrich delivery and operational analysis.
 
 ---
 
-## Current Architecture
+## Data Quality and Validation
 
-```mermaid
-flowchart TD
-    A[Olist CSV files] --> D[Python source onboarding]
-    B[Supplier business file] --> D
-    C[Public holidays API] --> D
+The project uses validation at multiple stages instead of relying on a single final check.
 
-    D --> E[Raw landing, profiling, quality checks]
-    E --> F[Cleaning and validation]
-    F --> G[Cleaned local outputs]
+| Validation layer | Verified result |
+| --- | ---: |
+| Raw quality checks | **81 PASS / 0 FAIL** |
+| Cleaning validation | **72 PASS / 0 FAIL** |
+| dbt data tests | **39 tests validated** |
+| Curated dbt sources | **11** |
+| dbt models | **34** |
+| Reporting marts | **6** |
 
-    G --> H[PostgreSQL raw schema]
-    H --> I[dbt staging models]
-    I --> J[dbt mart models]
-    J --> K[Power BI dashboard]
+Quality controls include source profiling, schema and required-field checks, cleaning validation, business-rule flags, audit records, dbt tests, pytest, and CI validation.
 
-    L[PowerShell task runners] --> D
-    M[Airflow orchestration] --> D
-    M --> H
-    M --> I
-    M --> J
+A successful pipeline does **not** mean pretending source data is perfect. Supplier-source exceptions remain observable through explicit quality flags and the final data-quality mart.
 
-    N[pytest tests] --> O[GitHub Actions CI]
-    P[Report gates] --> M
-    Q[Audit tables] --> M
+---
+
+## dbt Warehouse Design
+
+The current Redshift dbt project is under:
+
+```text
+dbt/
 ```
+
+It contains four analytical layers.
+
+### Staging
+
+Staging models normalize source naming and cast Glue string values into analytical data types. Because the source data is queried through Redshift Spectrum, staging models use late-binding views where required.
+
+### Intermediate
+
+Intermediate models resolve one-to-many relationships and protect analytical grain before facts are built.
+
+Examples include:
+
+- geolocation reduced to ZIP-level analytical grain
+- payments aggregated to order level
+- reviews aggregated to order level
+- translated / enriched products
+- latest supplier-product state
+- enriched orders
+- enriched order items
+- product-level sales context
+
+### Core Warehouse
+
+Core models include:
+
+- `dim_date`
+- `dim_customers`
+- `dim_products`
+- `dim_sellers`
+- `dim_suppliers`
+- `fct_orders`
+- `fct_order_items`
+- `fct_payments`
+- `fct_reviews`
+
+Important grain rules are explicit. Supplier-product records are not joined directly into `fct_order_items`, preventing multi-supplier products from duplicating item-level revenue.
+
+### Reporting Marts
+
+The six validated reporting marts are:
+
+- `mart_sales_performance`
+- `mart_customer_behavior`
+- `mart_delivery_operations`
+- `mart_product_performance`
+- `mart_supplier_product_health`
+- `mart_data_quality`
+
+All six marts were execution-validated in Redshift and the marts test suite passed.
+
+---
+
+## Power BI Report
+
+Power BI consumes the validated reporting layer in **Import mode**.
+
+The final report contains six pages:
+
+| Page | Purpose |
+| --- | --- |
+| **Executive Overview** | Revenue, orders, customers, AOV, repeat rate, sales trend and delivery KPIs |
+| **Sales & Products** | Revenue, units, product performance, category mix and seller-state performance |
+| **Customers** | Customer value, repeat behavior, geography, payment type and spend frequency |
+| **Delivery & Operations** | Delivery time, carrier handoff, late-delivery rate, holiday impact and state performance |
+| **Suppliers** | Supplier price, marketplace-price comparison, stock status and supplier-product exceptions |
+| **Data Quality & Pipeline Health** | Pipeline validation checkpoints plus supplier-source quality exceptions |
+
+### Executive Overview
+
+![Executive Overview](screenshots/Executive%2001-Overview.png)
+
+### Sales & Products
+
+![Sales & Products](screenshots/Sales%20%26%2002-Products.png)
+
+### Customers
+
+![Customers](screenshots/03-Customers.png)
+
+### Delivery & Operations
+
+![Delivery & Operations](screenshots/Delivery%20%26%2005-Operations.png)
+
+### Suppliers
+
+![Suppliers](screenshots/06-Suppliers.png)
+
+### Data Quality & Pipeline Health
+
+![Data Quality & Pipeline Health](screenshots/Data%20Quality%20%26%20Pipeline%20Test.png)
+
+Power BI assets are stored under:
+
+```text
+powerbi/
+```
+
+---
+
+## AWS and Cost Controls
+
+The cloud extension was implemented deliberately with cost controls rather than leaving development resources unconstrained.
+
+The project uses:
+
+- Amazon S3 for curated data-lake storage
+- AWS Glue Data Catalog
+- Redshift Spectrum
+- Redshift Serverless
+- AWS Secrets Manager for managed Redshift credentials
+- Terraform for infrastructure provisioning
+
+Redshift Serverless is configured with controlled capacity and a usage limit. During development, dbt builds were executed layer-by-layer to avoid unnecessary warehouse compute.
+
+Power BI uses **Import mode** so interacting with the report does not continuously query Redshift.
+
+---
+
+## Infrastructure as Code
+
+Terraform code is under:
+
+```text
+infra/terraform/
+```
+
+Terraform manages the AWS resources required by the cloud analytics path, including data-lake and Redshift Serverless components.
+
+Local credentials, state, `.tfvars`, dbt profiles, and generated artifacts should never be committed.
+
+---
+
+## Orchestration
+
+Apache Airflow is used for the tested local workflow through Docker Compose.
+
+Current DAGs include:
+
+| DAG | Purpose |
+| --- | --- |
+| `retail_local_full_refresh` | Refreshes the local analytics workflow |
+| `br_holidays_api_refresh` | Refreshes the public-holiday enrichment pipeline |
+
+The Airflow layer coordinates existing Python / validation / database / dbt steps rather than embedding business transformation logic inside DAG files.
+
+The local PostgreSQL workflow is retained as an earlier implementation stage and demonstrates orchestration, recovery, audit, and local reproducibility.
+
+---
+
+## Testing and CI
+
+Automated validation includes:
+
+- `pytest`
+- dbt parsing / project validation
+- source and transformation quality gates
+- GitHub Actions CI
+
+The repository includes:
+
+```text
+.github/workflows/ci.yml
+```
+
+CI is designed to catch Python and dbt project issues before changes are merged.
 
 ---
 
 ## Repository Structure
 
 ```text
-data/
-  raw/                         # Original source files and API landing outputs
-  processed/                   # Cleaned and validated outputs
-
-dbt_retail_analytics/
-  models/
-    staging/                   # dbt staging models
-    marts/                     # dbt business-facing models
-    exposures.yml              # Power BI dashboard exposure
-  dbt_project.yml
-  profiles.yml                 # Local Airflow dbt profile
-
-airflow/
-  dags/                        # Airflow DAG definitions
-  plugins/                     # Optional Airflow plugins
-  logs/                        # Local Airflow logs, ignored by Git
-
-docs/                          # Project documentation and runbooks
-powerbi/                       # Power BI dashboard file
-reports/                       # Profiling, quality, validation, and load reports
-scripts/                       # Local PowerShell task runners
-sql/                           # SQL scripts and reference queries
-src/retail_analytics/          # Python package
-tests/                         # Lightweight pytest tests
-.github/workflows/             # GitHub Actions CI
+.
+├── .github/workflows/       # GitHub Actions CI
+├── airflow/dags/            # Airflow DAGs
+├── data/                    # Source / local data layers
+├── dbt/                     # Current Redshift dbt warehouse project
+├── dbt_retail_analytics/    # Earlier PostgreSQL dbt implementation
+├── docs/                    # Design notes and runbooks
+├── infra/terraform/         # AWS infrastructure as code
+├── powerbi/                 # Power BI files
+├── reports/                 # Profiling / quality / validation reports
+├── screenshots/             # Final and historical report screenshots
+├── scripts/                 # Repeatable task / validation runners
+├── sql/                     # SQL utilities and reference queries
+├── src/retail_analytics/    # Python package
+├── tests/                   # pytest tests
+├── Dockerfile.airflow
+├── docker-compose.yml
+└── README.md
 ```
 
-Generated dbt artifacts such as `dbt_retail_analytics/target/` should not be committed.
-
 ---
 
-## Local File Layers
+## Local Validation
 
-| Layer             | Purpose                                                                |
-| ----------------- | ---------------------------------------------------------------------- |
-| `data/raw/`       | Original source files and raw API landing outputs                      |
-| `data/processed/` | Cleaned and validated outputs                                          |
-| `reports/`        | Inventory, profiling, quality, validation, and PostgreSQL load reports |
-| `docs/`           | Architecture notes, runbooks, source design, and project documentation |
-| `scripts/`        | Repeatable local task runners                                          |
-| `airflow/dags/`   | Airflow orchestration definitions                                      |
+The repository includes offline validation scripts for checking the project without consuming Redshift compute.
 
----
-
-## PostgreSQL Schemas
-
-| Schema        | Purpose                                                    |
-| ------------- | ---------------------------------------------------------- |
-| `raw`         | Source-like tables loaded from cleaned validated files     |
-| `staging`     | Earlier SQL prototype layer used before dbt migration      |
-| `mart`        | Earlier SQL prototype mart layer used before dbt migration |
-| `audit`       | Load audit and pipeline run metadata                       |
-| `dbt_staging` | dbt-managed staging models                                 |
-| `dbt_mart`    | dbt-managed business-facing models                         |
-
----
-
-## Source Onboarding Pattern
-
-Each source follows a repeatable onboarding pattern:
+Typical checks include:
 
 ```text
-extract / land raw data
-→ inventory or profile
-→ quality checks
-→ clean / normalize
-→ cleaned output validation
-→ PostgreSQL raw load
-→ PostgreSQL load validation
-→ dbt source / staging / mart
-→ BI reporting
-→ documentation
+Python syntax
+→ pytest
+→ dbt parse / dbt inventory
+→ Docker Compose configuration
+→ Terraform formatting / validation
+→ Git hygiene
 ```
 
-This pattern has been applied to:
-
-* Olist e-commerce data
-* supplier product updates
-* Public public holidays API data
+This separates inexpensive local validation from paid warehouse execution.
 
 ---
 
-## Implemented Pipelines
+## Technical Stack
 
-### Olist E-Commerce Data
-
-The Olist dataset is used as the main e-commerce operational dataset.
-
-It includes:
-
-* customers
-* orders
-* order items
-* order payments
-* order reviews
-* products
-* sellers
-* geolocation
-* product category translation
-
-### Supplier Product Updates
-
-A handmade supplier source simulates realistic messy business data.
-
-It includes examples of:
-
-* missing product IDs
-* missing currency values
-* invalid prices
-* negative prices
-* unknown stock statuses
-* invalid timestamps
-* duplicate business keys
-
-The supplier mart keeps problematic rows visible using quality flags and a `needs_business_review` indicator.
-
-### Public Holidays API
-
-Public holidays are extracted from the Nager.Date API and used to enrich the retail e-commerce data.
-
-The holiday source supports analysis such as:
-
-* order volume around public holidays
-* revenue around holiday windows
-* review score around holidays
-* late delivery rate around holidays
-* retail-relevant holiday grouping
+| Area | Technologies |
+| --- | --- |
+| Programming | Python, SQL, PowerShell |
+| Data processing | pandas |
+| Local database | PostgreSQL |
+| Cloud storage | Amazon S3 |
+| Catalog | AWS Glue |
+| Cloud warehouse | Amazon Redshift Serverless / Spectrum |
+| Transformation | dbt Core |
+| Orchestration | Apache Airflow |
+| Infrastructure as Code | Terraform |
+| Containers | Docker / Docker Compose |
+| Business Intelligence | Power BI |
+| Testing | pytest, dbt tests, custom validation gates |
+| CI/CD | GitHub Actions |
+| Version control | Git / GitHub |
 
 ---
 
-## dbt Transformation Layer
+## Key Engineering Decisions
 
-The project uses dbt Core on top of PostgreSQL.
+### Preserve source-quality exceptions
+Supplier rows with quality problems remain observable through explicit flags instead of being removed simply to make downstream tests green.
 
-Flow:
+### Protect analytical grain
+Payments, reviews, geolocation, and supplier-product records are transformed at the correct grain before joining into facts.
 
-```text
-PostgreSQL raw tables
-→ dbt sources
-→ dbt staging models
-→ dbt mart models
-→ dbt tests
-→ dbt documentation and lineage
-→ dbt exposure for Power BI
-```
+### Separate business marts from source storage
+Power BI consumes reporting marts rather than raw or Spectrum source tables.
 
-Important dbt models include:
+### Use cloud compute deliberately
+Redshift builds were tested in controlled layers, with Serverless usage limits and low-cost offline checks used wherever possible.
 
-| Model                          | Purpose                                    |
-| ------------------------------ | ------------------------------------------ |
-| `stg_orders`                   | Standardized order lifecycle data          |
-| `stg_order_items`              | Standardized item-level order data         |
-| `stg_customers`                | Customer identity and geography            |
-| `stg_products`                 | Product attributes and translated category |
-| `stg_sellers`                  | Seller identity and geography              |
-| `stg_order_payments`           | Payment data                               |
-| `stg_order_reviews`            | Review scores and sentiment preparation    |
-| `stg_supplier_product_updates` | Supplier update staging model              |
-| `stg_br_holidays`              | Public holidays staging model       |
-| `dim_customers`                | Customer dimension                         |
-| `dim_products`                 | Product dimension                          |
-| `dim_sellers`                  | Seller dimension                           |
-| `dim_br_holidays`              | Public-holiday dimension            |
-| `fct_orders`                   | Order lifecycle and delivery fact          |
-| `fct_order_items`              | Item-level revenue fact                    |
-| `fct_payments`                 | Payment fact                               |
-| `fct_reviews`                  | Review fact                                |
-| `fct_supplier_product_updates` | Supplier data-quality fact                 |
-| `fct_orders_holiday_context`   | Order-level holiday-aware business mart    |
+### Keep the local implementation
+The PostgreSQL + Airflow implementation is retained as evidence of the project’s evolution from local fundamentals to a cloud warehouse rather than being presented as the current serving architecture.
 
 ---
 
-## Power BI Dashboard
-
-The Power BI dashboard consumes the dbt mart layer only. It does not connect directly to raw tables.
-
-Dashboard file:
-
-```text
-powerbi/retail_analytics_dashboard.pbix
-```
-
-Dashboard screenshots:
-
-```text
-screenshots/powerbi/
-```
-
-Dashboard pages:
-
-| Page                         | Purpose                                                                                                |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Executive Overview           | High-level business KPIs and trends                                                                    |
-| Revenue & Orders             | Revenue, order volume, product categories, and customer states                                         |
-| Product & Seller Performance | Product category and seller performance analysis                                                       |
-| Delivery & Reviews           | Relationship between delivery performance and customer satisfaction                                    |
-| Supplier Data Quality        | Supplier rows requiring business review                                                                |
-| Holiday Impact               | Holiday-aware revenue, order, review, and delivery analysis using  public-holiday API enrichment |
-
-The Power BI dashboard is documented as a dbt exposure.
-
----
-
-## Local Workflow Automation
-
-The project includes local task runners that make the platform repeatable before and alongside Airflow orchestration.
-
-### Full Local Platform Refresh
-
-Script:
-
-```text
-scripts/run_local_full_refresh.ps1
-```
-
-Purpose:
-
-```text
-create PostgreSQL schemas
-→ create audit tables
-→ validate cleaned-file mappings
-→ load Olist raw tables
-→ load supplier raw table
-→ load public holidays raw table
-→ validate PostgreSQL loads
-→ run PostgreSQL validation gate
-→ run dbt build
-→ record pipeline audit
-```
-
-Example command:
-
-```powershell
-.\scripts\run_local_full_refresh.ps1 `
-  -OlistRunDate 2026-05-26 `
-  -SupplierRunDate 2026-06-01 `
-  -BrHolidaysRunDate 2026-06-16
-```
-
-### Public Holidays API Refresh
-
-Script:
-
-```text
-scripts/run_br_holidays_pipeline.ps1
-```
-
-Purpose:
-
-```text
-extract public holidays API data
-→ clean
-→ quality checks
-→ quality gate
-→ cleaned output validation
-→ validation gate
-→ load raw.br_holidays
-→ build holiday-aware dbt models
-→ record pipeline audit
-```
-
-Example command:
-
-```powershell
-.\scripts\run_br_holidays_pipeline.ps1 -RunDate 2026-06-16
-```
-
----
-
-## Airflow Orchestration
-
-The project includes local Apache Airflow orchestration through Docker Compose.
-
-Airflow is used to coordinate already-tested Python CLI commands, PostgreSQL validation steps, report gates, and dbt builds.
-
-Airflow does not contain business transformation logic.
-
-Current DAGs:
-
-| DAG                         | Purpose                                             |
-| --------------------------- | --------------------------------------------------- |
-| `retail_local_full_refresh` | Refreshes the full local analytics platform         |
-| `br_holidays_api_refresh`   | Refreshes the public holidays API enrichment source |
-
-The Airflow layer demonstrates:
-
-* task dependency management
-* local orchestration
-* visibility into task status and logs
-* pipeline-level audit integration
-* quality-gate orchestration
-* dbt build orchestration
-* retries and task timeouts
-
-Detailed Airflow instructions are documented in:
-
-```text
-docs/airflow_orchestration_runbook.md
-```
-
----
-
-## Audit and Quality Gates
-
-The project includes two audit levels.
-
-| Audit table           | Purpose                        |
-| --------------------- | ------------------------------ |
-| `audit.pipeline_runs` | One row per pipeline execution |
-| `audit.load_audit`    | One row per raw-table load     |
-
-Validation and gate layers include:
-
-| Layer                      | Purpose                                                           |
-| -------------------------- | ----------------------------------------------------------------- |
-| Raw quality checks         | Check source-level quality before cleaning                        |
-| Cleaned output validation  | Confirm cleaned outputs exist and preserve expected structure     |
-| Report gates               | Stop the pipeline on error-level validation failures              |
-| PostgreSQL load validation | Compare cleaned files, raw tables, and audit records              |
-| dbt tests                  | Validate staging and mart assumptions                             |
-| CI tests                   | Check selected Python logic and dbt project parsing on every push |
-
----
-
-## PostgreSQL Recovery
-
-The project can recover from local PostgreSQL volume loss.
-
-Recovery process:
-
-```text
-start Docker/PostgreSQL
-→ recreate schemas and audit tables
-→ reload cleaned outputs into raw schema
-→ run dbt build
-→ refresh Power BI
-```
-
-Detailed recovery instructions are documented in:
-
-```text
-docs/postgres_recovery_runbook.md
-```
-
----
-
-## Testing and CI
-
-The project includes lightweight automated tests using `pytest`.
-
-The tests cover:
-
-* strict run-date validation
-* report-gate behavior
-* PostgreSQL load-target selection
-* public holidays normalization logic
-
-GitHub Actions CI runs automatically on pushes and pull requests to `master`.
-
-The CI workflow performs:
-
-```text
-install project dependencies
-→ run Python tests
-→ run dbt parse
-```
-
-This validates both Python pipeline logic and dbt project structure before continuing development.
-
----
-
-## Current Technical Stack
-
-| Area                  | Tools                                               |
-| --------------------- | --------------------------------------------------- |
-| Programming           | Python                                              |
-| Data processing       | pandas                                              |
-| Database              | PostgreSQL                                          |
-| Database UI           | pgAdmin                                             |
-| Containerization      | Docker Compose                                      |
-| Transformation        | dbt Core                                            |
-| Orchestration         | Apache Airflow                                      |
-| Business intelligence | Power BI                                            |
-| Data quality          | Custom Python checks, validation reports, dbt tests |
-| Workflow automation   | PowerShell task runners                             |
-| Audit                 | PostgreSQL audit tables                             |
-| Testing               | pytest                                              |
-| CI                    | GitHub Actions                                      |
-| Version control       | Git                                                 |
-| Documentation         | Markdown                                            |
-
----
-
-## Why the Project Is Built Locally First
-
-The project is intentionally built as a local production-style platform before moving to cloud infrastructure.
-
-The goal is to strengthen:
-
-* SQL fluency
-* Python fluency
-* source onboarding discipline
-* data quality thinking
-* validation-first development
-* debugging confidence
-* relational modeling
-* dbt modeling
-* BI/dashboard communication
-* orchestration thinking
-* documentation habits
-* Git and CI workflow
-
-Cloud services are planned later, but the foundation is built locally first to avoid hiding weak data logic behind managed services.
-
----
-
-## Current Status
-
-Completed:
-
-* local source onboarding
-* Olist cleaning and validation
-* supplier source simulation, cleaning, and validation
-* Public holidays API extraction, cleaning, and validation
-* PostgreSQL raw loading
-* table-level load audit
-* PostgreSQL load validation
-* dbt staging and mart models
-* dbt tests and docs
-* dbt exposure for Power BI
-* Power BI dashboard
-* local task runners
-* report gates
-* pipeline-level audit
-* PostgreSQL recovery runbook
-* pytest test suite
-* GitHub Actions CI
-* local Airflow Docker setup
-* Airflow full-platform refresh DAG
-* Airflow public holidays API refresh DAG
-* AWS and Terraform design
-* budget-control strategy
-* controlled AWS implementation
-* The cloud warehouse is now fully execution-validated through the reporting layer.
-
-  Verified:
-  - Python data-quality framework
-  - raw data-quality gate: **81 PASS / 0 FAIL**
-  - cleaning validation gate: **72 PASS / 0 FAIL**
-  - S3 / Glue / Spectrum access
-  - Redshift Data API connectivity
-  - **34 dbt models**
-  - **39 dbt data tests**
-  - **11 dbt sources**
-  - staging execution
-  - intermediate execution
-  - core warehouse execution
-  - all 6 reporting marts
-  - final dbt tests across the marts layer
-  - Redshift Serverless cost controls
-
-  Validated reporting marts:
-  - `mart_sales_performance`
-  - `mart_customer_behavior`
-  - `mart_delivery_operations`
-  - `mart_product_performance`
-  - `mart_supplier_product_health`
-  - `mart_data_quality`
-
-
-## Planned Next Phases
-
-- Power BI final report refresh using the validated reporting marts
-
-For portfolio use, Power BI Import mode is preferred over DirectQuery so report interaction does not repeatedly wake Redshift Serverless.
-
-### Optional Later Phase — Azure/Databricks Alternative Design
-
-An Azure/Databricks version may be considered later as a separate architecture option.
-
-Possible Azure version:
-
-```text
-ADLS Gen2
-→ Azure Databricks / Delta Lake
-→ dbt or Databricks SQL
-→ Power BI
-```
-
-This is intentionally deferred to keep the current project focused.
+## Project Status
+
+**Complete and portfolio-ready.**
+
+Verified end-to-end:
+
+- source onboarding and profiling
+- raw quality validation
+- cleaning and validation
+- Parquet publishing
+- S3 / Glue / Spectrum integration
+- Redshift Serverless connectivity
+- dbt staging execution
+- dbt intermediate execution
+- core warehouse execution
+- all six reporting marts
+- final dbt tests
+- Terraform infrastructure
+- local Airflow orchestration
+- automated tests / CI
+- six-page Power BI report
+- data-quality and pipeline-health reporting
 
 ---
 
 ## Portfolio Positioning
 
-This project is not presented as an enterprise production platform.
+This project is not presented as an enterprise production system. It is a **production-style portfolio platform** designed to demonstrate realistic engineering decisions, validation discipline, cloud cost awareness, analytical modeling, and communication with business-facing BI.
 
-It is a production-style local data engineering and analytics platform designed to simulate realistic commercial workflows.
+It is especially relevant to roles such as:
 
-It demonstrates:
-
-* source onboarding
-* API extraction
-* data profiling
-* data quality checks
-* cleaning and validation
-* PostgreSQL loading
-* audit logging
-* dbt modeling
-* business mart design
-* Power BI reporting
-* local workflow automation
-* Airflow orchestration
-* documentation
-* testing
-* CI
-* repeatable local workflows
-
-The project is designed to support transition into junior or bridge data roles such as:
-
-* BI Developer
-* ETL Developer
-* Junior Analytics Engineer
-* SQL Developer
-* Data Analyst with Python/SQL
-* Junior/ Mid-level Data Engineer
+- Junior Data Engineer
+- Analytics Engineer
+- BI / Data Engineer
+- ETL Developer
+- SQL Developer
+- Data Analyst with strong Python / SQL engineering skills
